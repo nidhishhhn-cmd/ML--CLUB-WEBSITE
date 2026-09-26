@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Production build outputs
+dist/
+dist-ssr/
+build/
+*.local
+
+# Portable binaries & local installation tools
+node-bin/
+*.bat
+*.ps1
+
+# Temporary diagnostic logs & files
+install-log.txt
+node-ver.txt
+npm-err.txt
+npm-out.txt
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Nested clone directory
+ML---CLUB-WEBSITE/
+ML--CLUB-WEBSITE/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Editor & OS files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.bak
+*.tmp
