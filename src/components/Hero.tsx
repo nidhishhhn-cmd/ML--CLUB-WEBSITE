@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import NeuralBackground from './NeuralBackground';
 
 const NAV_LINKS = [
@@ -9,27 +10,54 @@ const NAV_LINKS = [
 ];
 
 export default function Hero() {
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const progress = Math.min(scrollY / 800, 1);
+  const videoScale = 1 + progress * 0.15;
+  const videoTranslate = scrollY * 0.32;
+  const videoOpacity = Math.max(1 - progress * 0.85, 0.1);
+
+  const contentTranslate = -scrollY * 0.35;
+  const contentOpacity = Math.max(1 - progress * 1.35, 0);
+
   return (
     <section className="relative min-h-screen w-full overflow-hidden flex flex-col">
       {/* ── Neural canvas background (behind everything) ── */}
       <NeuralBackground />
 
-      {/* ── Video background ── */}
+      {/* ── Video background with scroll parallax animation ── */}
       <video
         autoPlay
         loop
         muted
         playsInline
-        className="absolute inset-0 w-full h-full object-cover z-0"
+        className="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-75 ease-out"
+        style={{
+          transform: `translateY(${videoTranslate}px) scale(${videoScale})`,
+          opacity: videoOpacity,
+        }}
         aria-hidden="true"
       >
+        <source src="/hero-video.mp4.mp4" type="video/mp4" />
+        <source src="/hero-video.mp4" type="video/mp4" />
+        <source src="hero-video.mp4.mp4" type="video/mp4" />
+        <source src="hero-video.mp4" type="video/mp4" />
         <source
           src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4"
           type="video/mp4"
         />
       </video>
 
-      {/* ── Minimal dark vignette at very edges only (no scrims) ── */}
+      {/* ── Minimal dark vignette at very edges only ── */}
       <div
         aria-hidden="true"
         className="absolute inset-0 z-[1] pointer-events-none"
@@ -80,10 +108,14 @@ export default function Hero() {
         </div>
       </nav>
 
-      {/* ── Hero content ── */}
+      {/* ── Hero content with scroll parallax fade ── */}
       <div
         className="relative z-10 flex flex-col items-center text-center
-                   px-6 py-[90px] flex-1 justify-center"
+                   px-6 py-[90px] flex-1 justify-center transition-all duration-75 ease-out"
+        style={{
+          transform: `translateY(${contentTranslate}px)`,
+          opacity: contentOpacity,
+        }}
       >
         {/* Eyebrow tag */}
         <div className="liquid-glass rounded-full px-4 py-1.5 mb-10
@@ -118,16 +150,16 @@ export default function Hero() {
         </p>
 
         {/* Hero CTA */}
-        <button
-          type="button"
+        <a
+          href="#modules"
           id="hero-begin-journey"
           className="animate-fade-rise-delay-2 liquid-glass rounded-full
                      px-14 py-5 text-base mt-12 text-foreground
                      hover:scale-[1.03] cursor-pointer
-                     transition-transform duration-200"
+                     transition-transform duration-200 inline-block"
         >
           Begin Journey
-        </button>
+        </a>
       </div>
     </section>
   );

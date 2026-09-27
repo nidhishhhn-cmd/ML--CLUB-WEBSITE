@@ -14,6 +14,10 @@ node-bin/
 *.bat
 *.ps1
 
+# Large video files (exceeds GitHub 100MB limit)
+*.mp4
+*.mp4.mp4
+
 # Temporary diagnostic logs & files
 install-log.txt
 node-ver.txt

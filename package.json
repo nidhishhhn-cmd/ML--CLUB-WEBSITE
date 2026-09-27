@@ -5,8 +5,9 @@
   "description": "Official website for the Machine Learning Club at Srinivas Institute of Technology",
   "type": "module",
   "scripts": {
+    "predev": "node copy-video.js",
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "node copy-video.js && tsc -b && vite build",
     "preview": "vite preview"
   },
   "repository": {
