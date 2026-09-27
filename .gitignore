@@ -1,12 +1,22 @@
+# ==============================================================================
+# ML Club Website (.gitignore)
+# ==============================================================================
+
 # Dependencies
 node_modules/
 .pnp
 .pnp.js
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
 
 # Production build outputs
 dist/
 dist-ssr/
 build/
+out/
+.parcel-cache/
 *.local
 
 # Portable binaries & local installation tools
@@ -14,9 +24,18 @@ node-bin/
 *.bat
 *.ps1
 
-# Large video files (exceeds GitHub 100MB limit)
+# Large video & archive files (exceeds GitHub 100MB file limit)
 *.mp4
 *.mp4.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.zip
+*.tar
+*.tar.gz
+hero-video.mp4.mp4
+public/hero-video.mp4
 
 # Temporary diagnostic logs & files
 install-log.txt
@@ -34,19 +53,23 @@ lerna-debug.log*
 ML---CLUB-WEBSITE/
 ML--CLUB-WEBSITE/
 
-# Environment variables
+# Environment variables & secrets
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+*.pem
+*.key
 
 # Editor & OS files
 .vscode/*
 !.vscode/extensions.json
+!.vscode/settings.json
 .idea/
 .DS_Store
 Thumbs.db
+desktop.ini
 *.suo
 *.ntvs*
 *.njsproj
