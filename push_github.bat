@@ -34,7 +34,7 @@ if %errorlevel% neq 0 (
 :: Push to main
 echo [3/4] Pushing to branch 'main'...
 git branch -M main
-git push -u origin main
+git push -u origin main --force
 
 :: Push to branch1
 echo.

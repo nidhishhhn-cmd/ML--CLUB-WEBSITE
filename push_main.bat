@@ -47,7 +47,7 @@ git branch -M main
 :: 7. Push to origin main
 echo.
 echo [INFO] Pushing main branch to GitHub origin...
-git push -u origin main
+git push -u origin main --force
 
 echo.
 if %errorlevel% equ 0 (
