@@ -20,7 +20,6 @@ const filesToCopy = [
   'team.html',
   'index.css',
   '.nojekyll',
-  'hero-video.mp4.mp4',
 ];
 
 for (const file of filesToCopy) {
@@ -59,11 +58,22 @@ if (fs.existsSync(publicDir)) {
   }
 }
 
-// Ensure hero-video.mp4 is available at both images/ and root/public if found
+// Ensure optimized hero-video.mp4 is available in dist root and dist/images with case-insensitive fallbacks for Linux
 const videoCandidate = path.join(__dirname, 'images', 'hero-video.mp4.MP4');
-const publicHeroVideo = path.join(distDir, 'hero-video.mp4');
-if (fs.existsSync(videoCandidate) && !fs.existsSync(publicHeroVideo)) {
-  fs.copyFileSync(videoCandidate, publicHeroVideo);
+if (fs.existsSync(videoCandidate)) {
+  const targets = [
+    path.join(distDir, 'hero-video.mp4'),
+    path.join(distDir, 'hero-video.mp4.mp4'),
+    path.join(distDir, 'images', 'hero-video.mp4'),
+    path.join(distDir, 'images', 'hero-video.mp4.mp4'),
+    path.join(distDir, 'images', 'hero-video.mp4.MP4'),
+  ];
+  for (const target of targets) {
+    try {
+      fs.copyFileSync(videoCandidate, target);
+      console.log(`[build-static] Mirrored optimized video to: ${path.relative(distDir, target)}`);
+    } catch (err) {}
+  }
 }
 
 console.log('✅ [build-static] Static site built successfully in dist/ for Vercel!');

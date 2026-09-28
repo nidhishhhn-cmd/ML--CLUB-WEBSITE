@@ -26,7 +26,7 @@ git add -A
 echo [2/4] Committing changes...
 git diff --cached --quiet
 if %errorlevel% neq 0 (
-    git commit -m "deploy: configure vercel.json and build-static.js for seamless Vercel deployment"
+    git commit -m "perf: buttery smooth 60fps intro video with hardware acceleration and paused background decoders"
 ) else (
     echo [INFO] Working tree clean, nothing new to commit.
 )

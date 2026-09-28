@@ -63,12 +63,13 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%) translateZ(0);
+      -webkit-transform: translate(-50%, -50%) translateZ(0);
       width: clamp(300px, 60vw, 700px);
       height: clamp(200px, 40vh, 450px);
-      background: radial-gradient(ellipse at center, rgba(56, 189, 248, 0.15) 0%, rgba(99, 102, 241, 0.08) 45%, transparent 75%);
-      filter: blur(70px);
+      background: radial-gradient(ellipse at center, rgba(56, 189, 248, 0.16) 0%, rgba(99, 102, 241, 0.08) 50%, transparent 75%);
       pointer-events: none;
+      will-change: transform, opacity;
       animation: pulseGlow 6s infinite alternate ease-in-out;
     }
 
@@ -514,10 +515,7 @@
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(56, 189, 248, ${this.alpha})`;
-        ctx.shadowColor = '#38bdf8';
-        ctx.shadowBlur = 8;
         ctx.fill();
-        ctx.shadowBlur = 0;
       }
     }
 
@@ -610,9 +608,8 @@
       exit();
     });
 
-    // Touch or click anywhere to exit immediately on phone
+    // Click anywhere to enter site early
     stage.addEventListener('click', exit);
-    stage.addEventListener('touchstart', () => exit(), { passive: true });
   </script>
 </body>
 </html>

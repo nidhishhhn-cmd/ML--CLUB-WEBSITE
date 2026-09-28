@@ -35,7 +35,7 @@ echo [INFO] Checking for changes to commit...
 git diff-index --quiet HEAD >nul 2>&1
 if %errorlevel% neq 0 (
     echo [INFO] Committing new changes...
-    git commit -m "deploy: configure vercel.json and build-static.js for seamless Vercel deployment"
+    git commit -m "perf: buttery smooth 60fps intro video with hardware acceleration and paused background decoders"
 ) else (
     echo [INFO] No new changes to commit (working tree clean).
 )
