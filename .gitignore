@@ -1,5 +1,6 @@
 # ==============================================================================
 # ML Club Website (.gitignore)
+# Optimized for GitHub, GitHub Pages, Vercel, Netlify & Vite Deployments
 # ==============================================================================
 
 # Dependencies
@@ -19,23 +20,8 @@ out/
 .parcel-cache/
 *.local
 
-# Portable binaries & local installation tools
+# Portable binaries & local installation cache
 node-bin/
-*.bat
-*.ps1
-
-# Large video & archive files (exceeds GitHub 100MB file limit)
-*.mov
-*.avi
-*.mkv
-*.webm
-*.zip
-*.tar
-*.tar.gz
-
-# Allow compressed intro video (<100MB) to be tracked on GitHub
-!hero-video.mp4.mp4
-!public/hero-video.mp4
 
 # Temporary diagnostic logs & files
 install-log.txt
@@ -49,7 +35,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Nested clone directory
+# Nested clone directory (prevents accidental recursive clones)
 ML---CLUB-WEBSITE/
 ML--CLUB-WEBSITE/
 
@@ -77,3 +63,29 @@ desktop.ini
 *.sw?
 *.bak
 *.tmp
+
+# Batch & PowerShell scripts (ignore temporary scripts, allow repository deployment helpers)
+*.bat
+*.ps1
+!push_github.bat
+!push_github.ps1
+!push_main.bat
+!push_main.ps1
+!push_branch1.bat
+!push_branch1.ps1
+
+# Large video & archive files exceeding GitHub 100MB file limit
+*.mov
+*.avi
+*.mkv
+*.webm
+*.zip
+*.tar
+*.tar.gz
+
+# Production deployment media assets (<100MB) explicitly whitelisted
+!hero-video.mp4.mp4
+!public/hero-video.mp4
+!images/hero-video.mp4.MP4
+!images/hero-video.mp4.mp4
+!images/hero-video.mp4
