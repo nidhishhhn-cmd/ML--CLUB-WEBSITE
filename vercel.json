@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "outputDirectory": "dist",
+  "buildCommand": "node build-static.js",
+  "rewrites": [
+    { "source": "/team", "destination": "/members.html" },
+    { "source": "/members", "destination": "/members.html" },
+    { "source": "/intro", "destination": "/intro/index.html" }
+  ]
+}
