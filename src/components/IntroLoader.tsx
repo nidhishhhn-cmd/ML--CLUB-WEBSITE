@@ -15,27 +15,26 @@ export default function IntroLoader({ onComplete }: IntroLoaderProps) {
   const [progress, setProgress] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const videoRef = React.useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 90) {
-          clearInterval(timer);
-          return prev;
-        }
-        return Math.min(prev + Math.random() * 14 + 6, 92);
-      });
-    }, 120);
-
-    const finishTimer = setTimeout(() => {
-      completeIntro();
-    }, 2400);
-
-    return () => {
-      clearInterval(timer);
-      clearTimeout(finishTimer);
-    };
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 1.25;
+    }
   }, []);
+
+  const handleTimeUpdate = () => {
+    if (videoRef.current && videoRef.current.duration) {
+      const cur = videoRef.current.currentTime;
+      const dur = videoRef.current.duration;
+      const pct = Math.min(100, Math.floor((cur / dur) * 100));
+      setProgress(pct);
+
+      if (cur >= dur - 0.3) {
+        completeIntro();
+      }
+    }
+  };
 
   const completeIntro = () => {
     if (isCompleted) return;
@@ -46,13 +45,9 @@ export default function IntroLoader({ onComplete }: IntroLoaderProps) {
       setIsFadingOut(true);
       setTimeout(() => {
         if (onComplete) onComplete();
-      }, 800);
-    }, 350);
+      }, 950);
+    }, 250);
   };
-
-  if (isCompleted && isFadingOut) {
-    // rendered in fading out state
-  }
 
   const getStatusText = () => {
     if (progress < 30) return STATUSES[0];
@@ -63,19 +58,21 @@ export default function IntroLoader({ onComplete }: IntroLoaderProps) {
 
   return (
     <div
-      className={`fixed inset-0 w-screen h-screen z-[99999] bg-[#02131e] flex flex-col items-center justify-center overflow-hidden transition-all duration-700 ease-out ${
-        isFadingOut ? 'opacity-0 scale-105 pointer-events-none invisible' : 'opacity-100 scale-100'
+      className={`fixed inset-0 w-screen h-screen z-[99999] bg-[#02131e] flex flex-col items-center justify-center overflow-hidden transition-all duration-1000 ease-out ${
+        isFadingOut ? 'opacity-0 scale-105 filter blur-md pointer-events-none invisible' : 'opacity-100 scale-100'
       }`}
       aria-label="Website Intro"
     >
       {/* Background Video */}
       <div className="absolute inset-0 w-full h-full overflow-hidden">
         <video
+          ref={videoRef}
           autoPlay
-          loop
           muted
           playsInline
-          className={`w-full h-full object-cover opacity-80 brightness-95 contrast-105 transition-transform duration-1000 ${
+          onTimeUpdate={handleTimeUpdate}
+          onEnded={completeIntro}
+          className={`w-full h-full object-cover opacity-85 brightness-95 contrast-105 transition-transform duration-1000 ${
             isFadingOut ? 'scale-110' : 'scale-100'
           }`}
           aria-hidden="true"
