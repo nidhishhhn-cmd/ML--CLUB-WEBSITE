@@ -7,12 +7,12 @@
   "scripts": {
     "predev": "node copy-video.js",
     "dev": "vite",
-    "build": "node copy-video.js && tsc -b && vite build",
+    "build": "node build-static.js",
     "preview": "vite preview"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nidhishhhn-cmd/ML---CLUB-WEBSITE.git"
+    "url": "https://github.com/nidhishhhn-cmd/ML--CLUB-WEBSITE.git"
   },
   "keywords": [
     "machine-learning",

@@ -30,7 +30,7 @@ export default function Hero() {
   const contentOpacity = Math.max(1 - progress * 1.35, 0);
 
   return (
-    <section className="relative min-h-screen w-full overflow-hidden flex flex-col">
+    <section id="hero" className="relative min-h-screen w-full overflow-hidden flex flex-col scroll-mt-20">
       {/* ── Neural canvas background (behind everything) ── */}
       <NeuralBackground />
 

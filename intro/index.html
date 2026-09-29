@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ML CLUB | Srinivas Institute of Technology</title>
+  <meta name="description" content="Machine Learning Club — Srinivas Institute of Technology. Official Hub for Artificial Intelligence & Neural Research.">
+
+  <!-- Google Fonts: Instrument Serif & Inter & Space Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #030712;
+      color: #ffffff;
+      font-family: 'Inter', -apple-system, sans-serif;
+    }
+
+    /* Main Viewport Container */
+    #intro-stage {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 45%, #061325 0%, #030712 65%, #01040a 100%);
+      overflow: hidden;
+      transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), filter 0.85s ease, transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #intro-stage.exit {
+      opacity: 0;
+      filter: blur(16px);
+      transform: scale(1.03);
+      pointer-events: none;
+    }
+
+    /* Soft Ambient Glow Behind Text */
+    .ambient-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(300px, 60vw, 700px);
+      height: clamp(200px, 40vh, 450px);
+      background: radial-gradient(ellipse at center, rgba(56, 189, 248, 0.15) 0%, rgba(99, 102, 241, 0.08) 45%, transparent 75%);
+      filter: blur(70px);
+      pointer-events: none;
+      animation: pulseGlow 6s infinite alternate ease-in-out;
+    }
+
+    @keyframes pulseGlow {
+      0% { transform: translate(-50%, -50%) scale(0.92); opacity: 0.6; }
+      100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+    }
+
+    /* Architectural Hairline Grid */
+    .hairline-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 80px 80px;
+      background-position: center center;
+      pointer-events: none;
+      mask-image: radial-gradient(circle at center, black 35%, transparent 80%);
+      -webkit-mask-image: radial-gradient(circle at center, black 35%, transparent 80%);
+    }
+
+    /* Ambient Neural Particles Canvas */
+    #particle-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Top Bar Telemetry & Skip */
+    .top-bar {
+      position: absolute;
+      top: 2.2rem;
+      left: 2.5rem;
+      right: 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 20;
+    }
+
+    .telemetry-tag {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Space Grotesk', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.4);
+      font-weight: 500;
+    }
+
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #38bdf8;
+      box-shadow: 0 0 10px #38bdf8;
+      animation: pulseDot 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { opacity: 0.35; transform: scale(0.85); }
+      50% { opacity: 1; transform: scale(1.3); }
+    }
+
+    .skip-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.65);
+      padding: 0.5rem 1.1rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .skip-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(56, 189, 248, 0.45);
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+    }
+
+    /* Pure Typographic Showcase Center */
+    .typography-center {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      max-width: 900px;
+      padding: 0 2rem;
+    }
+
+    /* College Pre-Title */
+    .college-header {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(0.7rem, 1.4vw, 0.85rem);
+      font-weight: 600;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: #38bdf8;
+      margin-bottom: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+    }
+
+    .college-header .line {
+      width: 28px;
+      height: 1px;
+      background: rgba(56, 189, 248, 0.4);
+    }
+
+    /* Grand Main Title */
+    .main-title {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-size: clamp(3rem, 8vw, 6.2rem);
+      font-weight: 400;
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      margin-bottom: 1.4rem;
+      position: relative;
+      animation: titleReveal 1.3s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+    }
+
+    .main-title .word-regular {
+      color: #ffffff;
+      display: inline-block;
+    }
+
+    .main-title .word-italic {
+      font-style: italic;
+      background: linear-gradient(135deg, #38bdf8 20%, #818cf8 60%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+      padding: 0 4px;
+      text-shadow: 0 0 35px rgba(56, 189, 248, 0.3);
+    }
+
+    /* Shimmer reflection sweeping across title */
+    .title-shimmer {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        105deg,
+        transparent 35%,
+        rgba(255, 255, 255, 0.35) 50%,
+        transparent 65%
+      );
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      pointer-events: none;
+      animation: titleShine 4s infinite cubic-bezier(0.16, 1, 0.3, 1) 1s;
+    }
+
+    @keyframes titleShine {
+      0% { background-position: 200% 0; }
+      40% { background-position: -200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    @keyframes titleReveal {
+      0% {
+        opacity: 0;
+        transform: translateY(30px) scale(0.96);
+        filter: blur(8px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+    }
+
+    /* Subtitle & Department */
+    .dept-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(0.72rem, 1.5vw, 0.9rem);
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.55);
+      margin-bottom: 0.8rem;
+      animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+    }
+
+    .tagline {
+      font-size: clamp(0.9rem, 1.8vw, 1.08rem);
+      font-weight: 300;
+      color: #94a3b8;
+      letter-spacing: 0.06em;
+      margin-bottom: 2.8rem;
+      animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.65s both;
+    }
+
+    .tagline span {
+      color: #f1f5f9;
+      font-weight: 500;
+    }
+
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(18px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Slim Luxury Progress Line */
+    .timeline-indicator {
+      width: 100%;
+      max-width: 240px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.8s both;
+    }
+
+    .track {
+      width: 100%;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 99px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
+      border-radius: 99px;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
+      transition: width 0.06s linear;
+    }
+
+    .status-text {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.35);
+      font-weight: 500;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 640px) {
+      .top-bar { top: 1.4rem; left: 1.4rem; right: 1.4rem; }
+      .college-header { font-size: 0.65rem; letter-spacing: 0.22em; }
+      .college-header .line { width: 16px; }
+      .dept-title { font-size: 0.68rem; letter-spacing: 0.16em; }
+      .tagline { font-size: 0.85rem; margin-bottom: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="intro-stage">
+    <!-- Ambient Backdrop Glow -->
+    <div class="ambient-glow"></div>
+
+    <!-- Architectural Hairline Grid -->
+    <div class="hairline-grid"></div>
+
+    <!-- Organic Neural Constellation Particles -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Top Telemetry & Controls -->
+    <div class="top-bar">
+      <div class="telemetry-tag">
+        <span class="pulse-dot"></span>
+        <span>ML CLUB • SIT</span>
+      </div>
+      <button class="skip-btn" id="btn-skip">
+        <span>Enter</span>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14"></path>
+          <path d="m12 5 7 7-7 7"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Pure Typographic Showcase -->
+    <div class="typography-center">
+      <div class="college-header">
+        <span class="line"></span>
+        <span>Srinivas Institute of Technology</span>
+        <span class="line"></span>
+      </div>
+
+      <h1 class="main-title">
+        <span class="word-regular">Machine</span>
+        <span class="word-italic">Learning</span>
+        <span class="word-regular">Club</span>
+        <span class="title-shimmer" aria-hidden="true">
+          Machine Learning Club
+        </span>
+      </h1>
+
+      <p class="dept-title">
+        Artificial Intelligence & Neural Innovations
+      </p>
+
+      <p class="tagline">
+        <span>Mining Knowledge.</span> Powering Tomorrow's Intelligence.
+      </p>
+
+      <!-- Minimal Slim Progress Line -->
+      <div class="timeline-indicator">
+        <div class="track">
+          <div class="bar" id="progress-bar"></div>
+        </div>
+        <div class="status-text" id="status-text">INITIALIZING...</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================================
+       1. AMBIENT NEURAL CONSTELLATION PARTICLES (60FPS Lightweight Canvas)
+       ========================================================================= */
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+    const COUNT = 45;
+    const MAX_DIST = 140;
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 0.35;
+        this.vy = (Math.random() - 0.5) * 0.35;
+        this.r = Math.random() * 1.5 + 1.0;
+        this.alpha = Math.random() * 0.35 + 0.15;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0) this.x = width;
+        if (this.x > width) this.x = 0;
+        if (this.y < 0) this.y = height;
+        if (this.y > height) this.y = 0;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(56, 189, 248, ${this.alpha})`;
+        ctx.shadowColor = '#38bdf8';
+        ctx.shadowBlur = 8;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    for (let i = 0; i < COUNT; i++) particles.push(new Particle());
+
+    function render() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Connecting filaments
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < MAX_DIST) {
+            const a = (1 - dist / MAX_DIST) * 0.12;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(56, 189, 248, ${a})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      }
+
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+
+      requestAnimationFrame(render);
+    }
+    requestAnimationFrame(render);
+
+    /* =========================================================================
+       2. REFINED TIMELINE & SEAMLESS TRANSITION (~3.0s Posh Flow)
+       ========================================================================= */
+    const stage = document.getElementById('intro-stage');
+    const progressBar = document.getElementById('progress-bar');
+    const statusText = document.getElementById('status-text');
+    const btnSkip = document.getElementById('btn-skip');
+
+    const DURATION = 3000; // 3.0s fast, elegant entrance
+    const start = Date.now();
+    let exited = false;
+
+    const PHASES = [
+      { progress: 0.15, text: 'INITIALIZING...' },
+      { progress: 0.50, text: 'SYNAPSE LINK ACTIVE...' },
+      { progress: 0.85, text: 'WELCOME TO ML CLUB' },
+      { progress: 1.00, text: 'ENTERING PORTAL...' }
+    ];
+
+    function step() {
+      if (exited) return;
+
+      const diff = Date.now() - start;
+      const progress = Math.min(diff / DURATION, 1);
+      progressBar.style.width = `${progress * 100}%`;
+
+      for (let i = PHASES.length - 1; i >= 0; i--) {
+        if (progress >= PHASES[i].progress) {
+          statusText.innerText = PHASES[i].text;
+          break;
+        }
+      }
+
+      if (progress >= 1) {
+        exit();
+      } else {
+        requestAnimationFrame(step);
+      }
+    }
+    requestAnimationFrame(step);
+
+    function exit() {
+      if (exited) return;
+      exited = true;
+
+      stage.classList.add('exit');
+
+      setTimeout(() => {
+        window.location.replace('../index.html');
+      }, 700);
+    }
+
+    btnSkip.addEventListener('click', exit);
+  </script>
+</body>
+</html>
