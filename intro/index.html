@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ML CLUB | Srinivas Institute of Technology</title>
-  <meta name="description" content="Machine Learning Club — Srinivas Institute of Technology. Official Hub for Artificial Intelligence & Neural Research.">
+  <meta name="description"
+    content="Machine Learning Club — Srinivas Institute of Technology. Official Hub for Artificial Intelligence & Neural Research.">
 
-  <!-- Google Fonts: Instrument Serif & Inter & Space Grotesk -->
+  <!-- Google Fonts: Instrument Serif, Inter & Space Grotesk -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
 
   <style>
     * {
@@ -20,16 +24,17 @@
       -webkit-user-select: none;
     }
 
-    body, html {
+    body,
+    html {
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background-color: #030712;
+      background-color: #01040a;
       color: #ffffff;
       font-family: 'Inter', -apple-system, sans-serif;
     }
 
-    /* Main Viewport Container */
+    /* Main Viewport Container with 2.5s Cinematic Fade-out (2-3 seconds) */
     #intro-stage {
       position: relative;
       width: 100vw;
@@ -38,16 +43,53 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: radial-gradient(circle at 50% 45%, #061325 0%, #030712 65%, #01040a 100%);
+      background-color: #01040a;
       overflow: hidden;
-      transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), filter 0.85s ease, transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+      will-change: opacity, filter, transform;
+      transition: opacity 2000ms cubic-bezier(0.4, 0, 0.2, 1),
+        filter 2000ms cubic-bezier(0.4, 0, 0.2, 1),
+        transform 2000ms cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     #intro-stage.exit {
       opacity: 0;
-      filter: blur(16px);
-      transform: scale(1.03);
+      filter: blur(18px);
+      transform: scale(1.05);
       pointer-events: none;
+    }
+
+    /* Fullscreen Background Cinematic Video */
+    .intro-video-bg {
+      position: absolute;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: 1;
+      pointer-events: none;
+      filter: brightness(0.92) contrast(1.06) saturate(1.05);
+      transition: filter 2000ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 2000ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #intro-stage.exit .intro-video-bg {
+      filter: brightness(1.12) contrast(1.1) blur(24px);
+      transform: scale(1.08);
+    }
+
+    /* Vignette Scrim for High-Contrast Text Legibility */
+    .video-scrim {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(1, 4, 10, 0.45) 0%, rgba(1, 4, 10, 0.85) 100%);
+      z-index: 2;
+      pointer-events: none;
+      transition: opacity 2000ms ease;
+    }
+
+    #intro-stage.exit .video-scrim {
+      opacity: 0;
     }
 
     /* Soft Ambient Glow Behind Text */
@@ -56,29 +98,38 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: clamp(300px, 60vw, 700px);
-      height: clamp(200px, 40vh, 450px);
-      background: radial-gradient(ellipse at center, rgba(56, 189, 248, 0.15) 0%, rgba(99, 102, 241, 0.08) 45%, transparent 75%);
-      filter: blur(70px);
+      width: clamp(320px, 65vw, 750px);
+      height: clamp(220px, 45vh, 480px);
+      background: radial-gradient(ellipse at center, rgba(56, 189, 248, 0.18) 0%, rgba(99, 102, 241, 0.1) 45%, transparent 75%);
+      filter: blur(75px);
       pointer-events: none;
+      z-index: 3;
       animation: pulseGlow 6s infinite alternate ease-in-out;
     }
 
     @keyframes pulseGlow {
-      0% { transform: translate(-50%, -50%) scale(0.92); opacity: 0.6; }
-      100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+      0% {
+        transform: translate(-50%, -50%) scale(0.92);
+        opacity: 0.6;
+      }
+
+      100% {
+        transform: translate(-50%, -50%) scale(1.15);
+        opacity: 1;
+      }
     }
 
-    /* Architectural Hairline Grid */
+    /* Architectural Hairline Grid Overlay */
     .hairline-grid {
       position: absolute;
       inset: 0;
-      background-image: 
+      background-image:
         linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
       background-size: 80px 80px;
       background-position: center center;
       pointer-events: none;
+      z-index: 4;
       mask-image: radial-gradient(circle at center, black 35%, transparent 80%);
       -webkit-mask-image: radial-gradient(circle at center, black 35%, transparent 80%);
     }
@@ -90,10 +141,10 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
-      z-index: 2;
+      z-index: 5;
     }
 
-    /* Top Bar Telemetry & Skip */
+    /* Top Bar Telemetry & Controls */
     .top-bar {
       position: absolute;
       top: 2.2rem;
@@ -113,8 +164,14 @@
       font-size: 0.72rem;
       letter-spacing: 0.25em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.4);
+      color: rgba(255, 255, 255, 0.6);
       font-weight: 500;
+      background: rgba(4, 18, 30, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(56, 189, 248, 0.25);
     }
 
     .pulse-dot {
@@ -127,35 +184,53 @@
     }
 
     @keyframes pulseDot {
-      0%, 100% { opacity: 0.35; transform: scale(0.85); }
-      50% { opacity: 1; transform: scale(1.3); }
+
+      0%,
+      100% {
+        opacity: 0.35;
+        transform: scale(0.85);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.3);
+      }
     }
 
+    .controls-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .audio-btn,
     .skip-btn {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: rgba(255, 255, 255, 0.65);
-      padding: 0.5rem 1.1rem;
+      background: rgba(4, 18, 30, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.85);
+      padding: 0.5rem 1.15rem;
       font-family: 'Space Grotesk', sans-serif;
       font-size: 0.72rem;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       border-radius: 999px;
       cursor: pointer;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       align-items: center;
       gap: 6px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
     }
 
+    .audio-btn:hover,
     .skip-btn:hover {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(56, 189, 248, 0.45);
+      background: rgba(56, 189, 248, 0.18);
+      border-color: rgba(56, 189, 248, 0.5);
       color: #ffffff;
       transform: translateY(-1px);
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+      box-shadow: 0 0 24px rgba(56, 189, 248, 0.3);
     }
 
     /* Pure Typographic Showcase Center */
@@ -166,7 +241,7 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      max-width: 900px;
+      max-width: 920px;
       padding: 0 2rem;
     }
 
@@ -178,7 +253,7 @@
       letter-spacing: 0.32em;
       text-transform: uppercase;
       color: #38bdf8;
-      margin-bottom: 1.8rem;
+      margin-bottom: 1.6rem;
       display: flex;
       align-items: center;
       gap: 12px;
@@ -188,7 +263,7 @@
     .college-header .line {
       width: 28px;
       height: 1px;
-      background: rgba(56, 189, 248, 0.4);
+      background: rgba(56, 189, 248, 0.5);
     }
 
     /* Grand Main Title */
@@ -199,7 +274,7 @@
       line-height: 1.02;
       letter-spacing: -0.02em;
       color: #ffffff;
-      margin-bottom: 1.4rem;
+      margin-bottom: 1.3rem;
       position: relative;
       animation: titleReveal 1.3s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
     }
@@ -207,6 +282,7 @@
     .main-title .word-regular {
       color: #ffffff;
       display: inline-block;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
     }
 
     .main-title .word-italic {
@@ -216,19 +292,17 @@
       -webkit-text-fill-color: transparent;
       display: inline-block;
       padding: 0 4px;
-      text-shadow: 0 0 35px rgba(56, 189, 248, 0.3);
+      text-shadow: 0 0 35px rgba(56, 189, 248, 0.4);
     }
 
     /* Shimmer reflection sweeping across title */
     .title-shimmer {
       position: absolute;
       inset: 0;
-      background: linear-gradient(
-        105deg,
-        transparent 35%,
-        rgba(255, 255, 255, 0.35) 50%,
-        transparent 65%
-      );
+      background: linear-gradient(105deg,
+          transparent 35%,
+          rgba(255, 255, 255, 0.4) 50%,
+          transparent 65%);
       background-size: 200% 100%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -237,9 +311,17 @@
     }
 
     @keyframes titleShine {
-      0% { background-position: 200% 0; }
-      40% { background-position: -200% 0; }
-      100% { background-position: -200% 0; }
+      0% {
+        background-position: 200% 0;
+      }
+
+      40% {
+        background-position: -200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
     }
 
     @keyframes titleReveal {
@@ -248,6 +330,7 @@
         transform: translateY(30px) scale(0.96);
         filter: blur(8px);
       }
+
       100% {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -262,34 +345,42 @@
       font-weight: 500;
       letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.55);
-      margin-bottom: 0.8rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 0.7rem;
       animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
     }
 
     .tagline {
       font-size: clamp(0.9rem, 1.8vw, 1.08rem);
       font-weight: 300;
-      color: #94a3b8;
+      color: #cbd5e1;
       letter-spacing: 0.06em;
-      margin-bottom: 2.8rem;
+      margin-bottom: 2.5rem;
       animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.65s both;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
     }
 
     .tagline span {
-      color: #f1f5f9;
+      color: #f8fafc;
       font-weight: 500;
     }
 
     @keyframes fadeUp {
-      0% { opacity: 0; transform: translateY(18px); }
-      100% { opacity: 1; transform: translateY(0); }
+      0% {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* Slim Luxury Progress Line */
     .timeline-indicator {
       width: 100%;
-      max-width: 240px;
+      max-width: 260px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -299,8 +390,8 @@
 
     .track {
       width: 100%;
-      height: 2px;
-      background: rgba(255, 255, 255, 0.08);
+      height: 3px;
+      background: rgba(255, 255, 255, 0.12);
       border-radius: 99px;
       overflow: hidden;
       position: relative;
@@ -311,32 +402,92 @@
       width: 0%;
       background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
       border-radius: 99px;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
-      transition: width 0.06s linear;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.9);
+      transition: width 0.1s linear;
     }
 
     .status-text {
       font-family: 'Space Grotesk', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.24em;
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.35);
+      color: rgba(255, 255, 255, 0.55);
       font-weight: 500;
+    }
+
+    /* Bottom Prompt Pill */
+    .tap-hint {
+      position: absolute;
+      bottom: 2.2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Space Grotesk', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.45);
+      z-index: 20;
+      pointer-events: none;
+      animation: pulseDot 2.5s infinite ease-in-out;
     }
 
     /* Responsive Design */
     @media (max-width: 640px) {
-      .top-bar { top: 1.4rem; left: 1.4rem; right: 1.4rem; }
-      .college-header { font-size: 0.65rem; letter-spacing: 0.22em; }
-      .college-header .line { width: 16px; }
-      .dept-title { font-size: 0.68rem; letter-spacing: 0.16em; }
-      .tagline { font-size: 0.85rem; margin-bottom: 2rem; }
+      .top-bar {
+        top: 1.2rem;
+        left: 1.2rem;
+        right: 1.2rem;
+      }
+
+      .college-header {
+        font-size: 0.65rem;
+        letter-spacing: 0.22em;
+      }
+
+      .college-header .line {
+        width: 16px;
+      }
+
+      .dept-title {
+        font-size: 0.68rem;
+        letter-spacing: 0.16em;
+      }
+
+      .tagline {
+        font-size: 0.85rem;
+        margin-bottom: 2rem;
+      }
+
+      .tap-hint {
+        bottom: 1.4rem;
+      }
     }
   </style>
 </head>
+
 <body>
 
-  <div id="intro-stage">
+  <div id="intro-stage" title="Tap anywhere to enter website">
+    <!-- Fullscreen Pure Video Player (Played as Intro from images folder) -->
+    <video id="intro-video" class="intro-video-bg" autoplay muted defaultMuted playsinline webkit-playsinline
+      preload="auto">
+      <source src="../images/video.mp4" type="video/mp4">
+      <source src="../images/video.mp4.mp4" type="video/mp4">
+      <source src="../images/hero-video.mp4.MP4" type="video/mp4">
+      <source src="../images/hero-video.mp4" type="video/mp4">
+      <source src="../images/hero-video.mp4.mp4" type="video/mp4">
+      <source src="/images/video.mp4" type="video/mp4">
+      <source src="/images/hero-video.mp4.MP4" type="video/mp4">
+      <source src="images/video.mp4" type="video/mp4">
+      <source src="images/hero-video.mp4.MP4" type="video/mp4">
+    </video>
+
+    <!-- Contrast Scrim Layer -->
+    <div class="video-scrim"></div>
+
     <!-- Ambient Backdrop Glow -->
     <div class="ambient-glow"></div>
 
@@ -352,13 +503,25 @@
         <span class="pulse-dot"></span>
         <span>ML CLUB • SIT</span>
       </div>
-      <button class="skip-btn" id="btn-skip">
-        <span>Enter</span>
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M5 12h14"></path>
-          <path d="m12 5 7 7-7 7"></path>
-        </svg>
-      </button>
+      <div class="controls-group">
+        <button class="audio-btn" id="btn-audio" title="Toggle Intro Audio">
+          <svg id="audio-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+          <span id="audio-label">Muted</span>
+        </button>
+        <button class="skip-btn" id="btn-skip" title="Enter Website">
+          <span>Enter</span>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"></path>
+            <path d="m12 5 7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
     </div>
 
     <!-- Pure Typographic Showcase -->
@@ -386,13 +549,22 @@
         <span>Mining Knowledge.</span> Powering Tomorrow's Intelligence.
       </p>
 
-      <!-- Minimal Slim Progress Line -->
+      <!-- Video Progress & Timeline Indicator -->
       <div class="timeline-indicator">
         <div class="track">
           <div class="bar" id="progress-bar"></div>
         </div>
-        <div class="status-text" id="status-text">INITIALIZING...</div>
+        <div class="status-text" id="status-text">INITIALIZING NEURAL LINK...</div>
       </div>
+    </div>
+
+    <!-- Tap anywhere hint -->
+    <div class="tap-hint">
+      <span>Tap anywhere to enter website</span>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <path d="m9 18 6-6-6-6" />
+      </svg>
     </div>
   </div>
 
@@ -404,8 +576,8 @@
     const ctx = canvas.getContext('2d');
     let width, height;
     let particles = [];
-    const COUNT = 45;
-    const MAX_DIST = 140;
+    const COUNT = 35;
+    const MAX_DIST = 130;
 
     function resize() {
       width = canvas.width = window.innerWidth;
@@ -418,9 +590,9 @@
       constructor() {
         this.x = Math.random() * width;
         this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.35;
-        this.vy = (Math.random() - 0.5) * 0.35;
-        this.r = Math.random() * 1.5 + 1.0;
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = (Math.random() - 0.5) * 0.3;
+        this.r = Math.random() * 1.5 + 0.8;
         this.alpha = Math.random() * 0.35 + 0.15;
       }
 
@@ -438,7 +610,7 @@
         ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(56, 189, 248, ${this.alpha})`;
         ctx.shadowColor = '#38bdf8';
-        ctx.shadowBlur = 8;
+        ctx.shadowBlur = 6;
         ctx.fill();
         ctx.shadowBlur = 0;
       }
@@ -446,22 +618,21 @@
 
     for (let i = 0; i < COUNT; i++) particles.push(new Particle());
 
-    function render() {
+    function renderParticles() {
       ctx.clearRect(0, 0, width, height);
 
-      // Connecting filaments
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < MAX_DIST) {
-            const a = (1 - dist / MAX_DIST) * 0.12;
+            const a = (1 - dist / MAX_DIST) * 0.1;
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
             ctx.strokeStyle = `rgba(56, 189, 248, ${a})`;
-            ctx.lineWidth = 0.8;
+            ctx.lineWidth = 0.7;
             ctx.stroke();
           }
         }
@@ -472,63 +643,144 @@
         p.draw();
       });
 
-      requestAnimationFrame(render);
+      requestAnimationFrame(renderParticles);
     }
-    requestAnimationFrame(render);
+    requestAnimationFrame(renderParticles);
 
     /* =========================================================================
-       2. REFINED TIMELINE & SEAMLESS TRANSITION (~3.0s Posh Flow)
+       2. CINEMATIC VIDEO PLAYBACK & 2-3s FADE-OUT ANIMATION (2500ms)
        ========================================================================= */
     const stage = document.getElementById('intro-stage');
+    const video = document.getElementById('intro-video');
     const progressBar = document.getElementById('progress-bar');
     const statusText = document.getElementById('status-text');
     const btnSkip = document.getElementById('btn-skip');
+    const btnAudio = document.getElementById('btn-audio');
+    const audioLabel = document.getElementById('audio-label');
+    const audioIcon = document.getElementById('audio-icon');
 
-    const DURATION = 3000; // 3.0s fast, elegant entrance
-    const start = Date.now();
+    const FADE_OUT_DURATION = 2500; // 2.5s (2-3 seconds smooth fade out)
     let exited = false;
 
-    const PHASES = [
-      { progress: 0.15, text: 'INITIALIZING...' },
-      { progress: 0.50, text: 'SYNAPSE LINK ACTIVE...' },
-      { progress: 0.85, text: 'WELCOME TO ML CLUB' },
-      { progress: 1.00, text: 'ENTERING PORTAL...' }
-    ];
-
-    function step() {
-      if (exited) return;
-
-      const diff = Date.now() - start;
-      const progress = Math.min(diff / DURATION, 1);
-      progressBar.style.width = `${progress * 100}%`;
-
-      for (let i = PHASES.length - 1; i >= 0; i--) {
-        if (progress >= PHASES[i].progress) {
-          statusText.innerText = PHASES[i].text;
-          break;
-        }
-      }
-
-      if (progress >= 1) {
-        exit();
+    // Toggle Audio Unmute / Mute
+    function toggleAudio(e) {
+      if (e) e.stopPropagation();
+      video.muted = !video.muted;
+      if (!video.muted) {
+        audioLabel.textContent = 'Audio On';
+        audioIcon.innerHTML = `
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        `;
       } else {
-        requestAnimationFrame(step);
+        audioLabel.textContent = 'Muted';
+        audioIcon.innerHTML = `
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <line x1="23" y1="9" x2="17" y2="15"></line>
+          <line x1="17" y1="9" x2="23" y2="15"></line>
+        `;
       }
     }
-    requestAnimationFrame(step);
+    btnAudio.addEventListener('click', toggleAudio);
 
-    function exit() {
+    // Audio Play Direct Autoplay
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute('muted', '');
+    video.setAttribute('playsinline', '');
+
+    function forcePlayVideo() {
+      if (exited) return;
+      video.muted = true;
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.warn('[Intro] Autoplay waiting for user gesture:', err);
+        });
+      }
+    }
+
+    forcePlayVideo();
+    video.addEventListener('loadedmetadata', forcePlayVideo);
+    video.addEventListener('canplay', forcePlayVideo);
+    window.addEventListener('load', forcePlayVideo);
+
+    const FADE_OUT_DURATION = 2000; // 2 seconds smooth fade out (25s -> 27s)
+    let exited = false;
+
+    // Track Video Progress: play full video, and start fade out at 25 seconds (or 2s before end)
+    video.addEventListener('timeupdate', () => {
+      if (exited) return;
+
+      const dur = (video.duration && !isNaN(video.duration) && video.duration > 0) ? video.duration : 27;
+      const progress = Math.min(video.currentTime / dur, 1);
+      progressBar.style.width = `${progress * 100}%`;
+
+      const curr = video.currentTime.toFixed(1);
+      const total = dur.toFixed(1);
+
+      if (video.currentTime < 8) {
+        statusText.innerText = `INITIALIZING NEURAL LINK • ${curr}s / ${total}s`;
+      } else if (video.currentTime < 18) {
+        statusText.innerText = `PROCESSING ARCHITECTURES • ${curr}s / ${total}s`;
+      } else if (video.currentTime < 25) {
+        statusText.innerText = `TRANSFERRING NEURAL DATA • ${curr}s / ${total}s`;
+      } else {
+        statusText.innerText = `ENTERING ML PORTAL • ${curr}s / ${total}s`;
+      }
+
+      // If video is >= 25s, fade out starts at 25 seconds
+      // If video file is shorter (e.g. 10s), fade out starts 2s before the end
+      const fadeTrigger = dur >= 25 ? 25 : Math.max(dur - 2.0, 1.0);
+      if (video.currentTime >= fadeTrigger) {
+        exit();
+      }
+    });
+
+    // When video ends naturally
+    video.addEventListener('ended', () => {
+      if (!exited) exit();
+    });
+
+    // Primary Exit Function: smoothly fades out over 2s (from 25s to 27s), then redirects
+    function exit(e) {
       if (exited) return;
       exited = true;
 
-      stage.classList.add('exit');
+      try {
+        sessionStorage.setItem('ml_intro_seen', 'true');
+      } catch (err) { }
 
+      // Apply fade-out transition class (2s duration)
+      stage.classList.add('exit');
+      statusText.innerText = 'LAUNCHING WEBSITE...';
+
+      // After 2.0s fade-out completes (at ~27 sec), redirect to website
       setTimeout(() => {
         window.location.replace('../index.html');
-      }, 700);
+      }, FADE_OUT_DURATION);
     }
 
-    btnSkip.addEventListener('click', exit);
+    // Tap anywhere or click enter to trigger exit
+    btnSkip.addEventListener('click', (e) => {
+      e.stopPropagation();
+      exit();
+    });
+    stage.addEventListener('click', exit);
+    stage.addEventListener('touchstart', exit, { passive: true });
+
+    window.addEventListener('keydown', (e) => {
+      if (!exited && (e.key === ' ' || e.key === 'Enter' || e.key === 'Escape')) {
+        exit();
+      }
+    });
+
+    // Fallback safety timer: if video hangs or takes > 35s, gracefully exit
+    setTimeout(() => {
+      if (!exited) exit();
+    }, 35000);
   </script>
 </body>
+
 </html>
