@@ -112,17 +112,20 @@
       }
     }
 
-    /* Liquid Glass Effect as specified */
+    /* Liquid Glass Effect optimized for 60-120 FPS */
     .liquid-glass {
       background: rgba(255, 255, 255, 0.02);
       background-blend-mode: luminosity;
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      border: none;
+      border: 1px solid rgba(255, 255, 255, 0.08);
       box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.12);
       position: relative;
       overflow: hidden;
-      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+      will-change: transform;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
     }
 
     .liquid-glass::before {
@@ -324,9 +327,11 @@
       background: rgba(255, 255, 255, 0.35);
     }
 
-    /* ── CUSTOM CURSOR ── */
-    * {
-      cursor: none !important;
+    /* ── CUSTOM CURSOR (Active exclusively on desktop devices with mouse pointer) ── */
+    @media (hover: hover) and (pointer: fine) {
+      * {
+        cursor: none !important;
+      }
     }
 
     /* ── WHATSAPP FLOATING BUTTON ── */
@@ -851,56 +856,164 @@
       border-radius: 1px;
     }
 
-    /* ── MOBILE VIEW OPTIMIZATIONS & RESPONSIVE DESIGN ── */
+    /* ── MOBILE VIEW OPTIMIZATIONS & 60FPS HIGH-PERFORMANCE ENGINE ── */
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    html, body {
+      overflow-x: hidden !important;
+      width: 100% !important;
+      max-width: 100vw !important;
+      touch-action: pan-y;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-gutter: stable;
+    }
+
+    /* Fixed hardware-accelerated ambient aurora orbs (0ms GPU filter cost) */
+    .aurora-orb {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      will-change: transform;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
+
+    /* Navbar scroll smoothing */
+    #mainNav {
+      transition: padding 0.28s ease, background 0.28s ease;
+    }
+    #mainNav.nav-compact {
+      padding-top: 0.5rem !important;
+      padding-bottom: 0.5rem !important;
+    }
+
     @media (max-width: 768px) {
       * {
         cursor: auto !important;
         -webkit-tap-highlight-color: transparent;
       }
 
-      #cursorOuter,
-      #cursorInner,
-      .cursor-trail-dot {
+      /* Disable expensive mask composite on mobile to maintain 60-120 FPS */
+      .liquid-glass::before {
         display: none !important;
       }
 
+      /* Fast mobile card compositing */
+      .liquid-glass {
+        backdrop-filter: blur(4px) !important;
+        -webkit-backdrop-filter: blur(4px) !important;
+        background-color: rgba(3, 14, 25, 0.9) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35) !important;
+      }
+
+      /* Turn off 3D perspective transforms & card shine on mobile */
+      .tilt-card {
+        transform: none !important;
+        transition: none !important;
+      }
+      .card-shine {
+        display: none !important;
+      }
+
+      /* Disable 2D Particle Canvas & mouse effects on mobile to conserve 100% CPU */
+      #neuralCanvas,
+      #cursorOuter,
+      #cursorInner,
+      .cursor-trail-dot,
+      #mouseSpotlight {
+        display: none !important;
+      }
+
+      /* Responsive Floating Action Buttons */
       #whatsappBtn {
-        bottom: 20px;
-        right: 16px;
-        width: 46px;
-        height: 46px;
+        bottom: 16px;
+        right: 14px;
+        width: 44px;
+        height: 44px;
       }
 
       #scrollTopBtn {
-        bottom: 20px;
-        right: 70px;
-        width: 42px;
-        height: 42px;
+        bottom: 16px;
+        right: 66px;
+        width: 40px;
+        height: 40px;
       }
 
-      .tilt-card {
-        transform: none !important;
+      /* Header and navbar full fit on phones */
+      header {
+        padding-left: 0.65rem !important;
+        padding-right: 0.65rem !important;
+      }
+      header nav {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+      }
+
+      /* Background video performance & contrast on mobile */
+      #bgVideo {
+        opacity: 0.3 !important;
+      }
+
+      /* Reduce aurora orbs density on mobile screens */
+      .aurora-orb:nth-child(even) {
+        display: none !important;
       }
     }
 
     @media (max-width: 640px) {
+      /* Prevent iOS Safari auto-zoom on input focus */
+      input, select, textarea {
+        font-size: 16px !important;
+      }
+
       h1 {
-        font-size: 2.35rem !important;
+        font-size: clamp(1.95rem, 7.5vw, 2.85rem) !important;
         line-height: 1.08 !important;
+        letter-spacing: -0.03em !important;
       }
 
       h2 {
-        font-size: 2.15rem !important;
+        font-size: clamp(1.5rem, 5.5vw, 2.15rem) !important;
+        line-height: 1.15 !important;
+      }
+
+      h3 {
+        font-size: 1.25rem !important;
       }
 
       section {
-        padding-top: 4rem !important;
-        padding-bottom: 4rem !important;
+        padding-top: 3rem !important;
+        padding-bottom: 3rem !important;
       }
 
-      .liquid-glass {
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+      /* Compact padding for cards on smaller phones */
+      .p-6, .p-7, .p-8 {
+        padding: 1.15rem !important;
+      }
+
+      /* Ensure hero text and badges fit without clipping */
+      #heroSubtext {
+        font-size: 0.92rem !important;
+        line-height: 1.55 !important;
+      }
+
+      /* Big photo showcase responsive sizing */
+      #bigPhotoStage {
+        height: 330px !important;
+      }
+      #bigPhotoTitle {
+        font-size: 1.25rem !important;
+        line-height: 1.2 !important;
+      }
+      #bigPhotoDesc {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
     }
 
@@ -922,13 +1035,15 @@
       cursor: pointer;
       user-select: none;
       -webkit-user-select: none;
-      transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), filter 0.85s ease, transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+      transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1), transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     #intro-stage.exit {
       opacity: 0;
-      filter: blur(16px);
-      transform: scale(1.03);
+      transform: scale(1.04);
       pointer-events: none;
     }
 
@@ -1167,19 +1282,15 @@
     <!-- Cinematic Tint Overlay for optimal card contrast & readibility across all sections -->
     <div class="absolute inset-0 bg-[#001726]/60 backdrop-blur-[1px]"></div>
 
-    <!-- Animated Ambient Aurora Orbs Floating in Background of all pages -->
-    <div
-      class="absolute top-[10%] left-[5%] w-[600px] h-[600px] rounded-full bg-cyan-500/15 blur-[140px] animate-pulse">
-    </div>
-    <div
-      class="absolute top-[35%] right-[5%] w-[700px] h-[700px] rounded-full bg-purple-500/15 blur-[160px] animate-pulse"
-      style="animation-duration: 7s"></div>
-    <div
-      class="absolute top-[65%] left-[10%] w-[650px] h-[650px] rounded-full bg-blue-600/15 blur-[150px] animate-pulse"
-      style="animation-duration: 9s"></div>
-    <div
-      class="absolute top-[85%] right-[15%] w-[550px] h-[550px] rounded-full bg-emerald-500/10 blur-[130px] animate-pulse"
-      style="animation-duration: 8s"></div>
+    <!-- Hardware-Accelerated Ambient Aurora Orbs (Smooth Zero-Cost Radial Gradients, No Costly 160px Gaussian Filters) -->
+    <div class="aurora-orb top-[10%] left-[5%] w-[520px] h-[520px]"
+      style="background: radial-gradient(circle, rgba(6, 182, 212, 0.16) 0%, transparent 70%);"></div>
+    <div class="aurora-orb top-[36%] right-[5%] w-[580px] h-[580px]"
+      style="background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%);"></div>
+    <div class="aurora-orb top-[65%] left-[8%] w-[540px] h-[540px]"
+      style="background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, transparent 70%);"></div>
+    <div class="aurora-orb top-[86%] right-[12%] w-[480px] h-[480px]"
+      style="background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 70%);"></div>
   </div>
 
   <!-- Interactive Neural Particles Canvas (Animated Background Layer over Video) -->
@@ -1267,7 +1378,7 @@
 
         <!-- Primary CTA: Begin Journey (Opens Registration Modal) -->
         <button onclick="openRegistrationModal()"
-          class="liquid-glass rounded-full px-5 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm text-white hover:scale-[1.04] active:scale-95 transition-all cursor-pointer flex items-center gap-2 font-medium border-2 border-cyan-400/70 bg-gradient-to-r from-cyan-500/25 via-blue-600/30 to-purple-600/25 shadow-[0_0_20px_rgba(6,182,212,0.35)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)]">
+          class="hidden sm:flex liquid-glass rounded-full px-5 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm text-white hover:scale-[1.04] active:scale-95 transition-all cursor-pointer items-center gap-2 font-medium border-2 border-cyan-400/70 bg-gradient-to-r from-cyan-500/25 via-blue-600/30 to-purple-600/25 shadow-[0_0_20px_rgba(6,182,212,0.35)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)]">
           <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
           <span>Begin Journey</span>
           <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-cyan-300"></i>
@@ -2529,12 +2640,12 @@
 
         <!-- Floating Left and Right Arrow Navigation Controls -->
         <button id="bigPhotoPrevBtn" onclick="event.stopPropagation(); stepBigPhoto(-1)" aria-label="Previous Photo"
-          class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 liquid-glass w-12 sm:w-14 h-12 sm:h-14 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:scale-110 active:scale-95 transition-all cursor-pointer border border-white/20 shadow-2xl z-20 hover:bg-cyan-500/20">
-          <i data-lucide="chevron-left" class="w-6 sm:w-7 h-6 sm:h-7"></i>
+          class="absolute left-2.5 sm:left-6 top-1/2 -translate-y-1/2 liquid-glass w-9 h-9 sm:w-14 sm:h-14 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:scale-110 active:scale-95 transition-all cursor-pointer border border-white/20 shadow-2xl z-20 hover:bg-cyan-500/20">
+          <i data-lucide="chevron-left" class="w-4 h-4 sm:w-7 sm:h-7"></i>
         </button>
         <button id="bigPhotoNextBtn" onclick="event.stopPropagation(); stepBigPhoto(1)" aria-label="Next Photo"
-          class="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 liquid-glass w-12 sm:w-14 h-12 sm:h-14 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:scale-110 active:scale-95 transition-all cursor-pointer border border-white/20 shadow-2xl z-20 hover:bg-cyan-500/20">
-          <i data-lucide="chevron-right" class="w-6 sm:w-7 h-6 sm:h-7"></i>
+          class="absolute right-2.5 sm:right-6 top-1/2 -translate-y-1/2 liquid-glass w-9 h-9 sm:w-14 sm:h-14 rounded-full flex items-center justify-center text-white/90 hover:text-white hover:scale-110 active:scale-95 transition-all cursor-pointer border border-white/20 shadow-2xl z-20 hover:bg-cyan-500/20">
+          <i data-lucide="chevron-right" class="w-4 h-4 sm:w-7 sm:h-7"></i>
         </button>
 
         <!-- Bottom Captions on Big Photo -->
@@ -2916,15 +3027,14 @@
         <div class="text-sm font-serif-heading text-white">ML CLUB • Srinivas Institute of Technology</div>
         <div>Merlapadavu, Valachil, Farangipete Post, Mangaluru, Karnataka - 574143</div>
       </div>
-      <div class="flex items-center gap-6">
+      <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2.5">
         <a href="#hero" class="hover:text-white transition-colors">Home</a>
         <a href="#modules" class="hover:text-white transition-colors">Modules</a>
         <a href="#projects" class="hover:text-white transition-colors">Projects</a>
         <a href="#team" class="hover:text-white transition-colors">Core Team</a>
         <a href="#mentors" class="hover:text-white transition-colors">Mentors</a>
         <a href="#gallery" class="hover:text-white transition-colors">Visionaries</a>
-        <a href="#join" onclick="openRegistrationModal()" class="hover:text-white transition-colors cursor-pointer">Join
-          Club</a>
+        <a href="#join" onclick="openRegistrationModal()" class="hover:text-white transition-colors cursor-pointer">Join Club</a>
         <a href="members.html" class="hover:text-white transition-colors">Club Members</a>
       </div>
       <div class="text-muted-foreground/60">
@@ -3438,47 +3548,71 @@
       }
     }
 
+    const isMobileDevice = window.innerWidth < 768 || (window.matchMedia && window.matchMedia('(max-width: 768px), (pointer: coarse)').matches);
+
     function initParticles() {
+      if (isMobileDevice) return; // 100% saved on mobile
       particles = [];
-      const count = Math.min(Math.floor((canvas.width * canvas.height) / 18000), 70);
+      const count = Math.min(Math.floor((canvas.width * canvas.height) / 32000), 32);
       for (let i = 0; i < count; i++) {
         particles.push(new Particle());
       }
     }
-    initParticles();
 
+    let particleAnimId = null;
     function animateParticles() {
+      if (isMobileDevice) return; // Completely disabled on mobile
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let i = 0; i < particles.length; i++) {
+      const len = particles.length;
+      const maxDist = 90;
+      const maxDistSq = 8100; // 90 * 90
+
+      for (let i = 0; i < len; i++) {
         particles[i].update();
         particles[i].draw();
 
-        // Connect nearby nodes
-        for (let j = i + 1; j < particles.length; j++) {
-          let dx = particles[i].x - particles[j].x;
-          let dy = particles[i].y - particles[j].y;
-          let distance = Math.sqrt(dx * dx + dy * dy);
-          if (distance < 110) {
+        // Connect nearby nodes using fast squared distance check
+        for (let j = i + 1; j < len; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dSq = dx * dx + dy * dy;
+          if (dSq < maxDistSq) {
+            const distance = Math.sqrt(dSq);
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(56, 189, 248, ${0.15 * (1 - distance / 110)})`;
-            ctx.lineWidth = 0.8;
+            ctx.strokeStyle = `rgba(56, 189, 248, ${0.11 * (1 - distance / maxDist)})`;
+            ctx.lineWidth = 0.65;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
             ctx.stroke();
-            ctx.closePath();
           }
         }
       }
-      requestAnimationFrame(animateParticles);
+      particleAnimId = requestAnimationFrame(animateParticles);
     }
-    animateParticles();
+
+    if (!isMobileDevice) {
+      initParticles();
+      animateParticles();
+    } else if (canvas) {
+      canvas.style.display = 'none';
+    }
+
+    // Pause canvas when user switches tab to conserve 100% CPU/battery
+    document.addEventListener('visibilitychange', () => {
+      if (isMobileDevice) return;
+      if (document.hidden) {
+        if (particleAnimId) cancelAnimationFrame(particleAnimId);
+      } else {
+        particleAnimId = requestAnimationFrame(animateParticles);
+      }
+    });
 
     // -------------------------------------------------------------
-    // 3. ENHANCED 3D TILT + SHINE EFFECT ON CARDS
+    // 3. ENHANCED 3D TILT + SHINE EFFECT ON CARDS (Desktop only)
     // -------------------------------------------------------------
     function initTiltCards() {
+      if (isMobileDevice) return; // Completely skip 3D tilt overhead on mobile
       document.querySelectorAll('.tilt-card').forEach(card => {
-        // Inject shine layer if not already present
         if (!card.querySelector('.card-shine')) {
           const shine = document.createElement('div');
           shine.className = 'card-shine';
@@ -3492,11 +3626,10 @@
           const y = e.clientY - rect.top;
           const centerX = rect.width / 2;
           const centerY = rect.height / 2;
-          const rotateX = ((y - centerY) / centerY) * -10;
-          const rotateY = ((x - centerX) / centerX) * 10;
-          card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px) scale(1.02)`;
-          card.style.boxShadow = `0 20px 50px -10px rgba(56,189,248,0.25), 0 0 30px rgba(129,140,248,0.1)`;
-          // Move the shine spot to cursor position
+          const rotateX = ((y - centerY) / centerY) * -8;
+          const rotateY = ((x - centerX) / centerX) * 8;
+          card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px) scale(1.01)`;
+          card.style.boxShadow = `0 16px 40px -10px rgba(56,189,248,0.2)`;
           const pct_x = (x / rect.width) * 100;
           const pct_y = (y / rect.height) * 100;
           shine.style.setProperty('--shine-x', pct_x + '%');
@@ -3504,7 +3637,7 @@
         });
 
         card.addEventListener('mouseleave', () => {
-          card.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0px) scale(1)';
+          card.style.transform = '';
           card.style.boxShadow = '';
         });
       });
@@ -3522,7 +3655,7 @@
         const target = +counter.getAttribute('data-target');
         const suffix = counter.getAttribute('data-suffix') || '';
         let count = 0;
-        const duration = 1600;
+        const duration = 1400;
         const increment = target / (duration / 16);
 
         function updateCount() {
@@ -3540,23 +3673,29 @@
     }
 
     // -------------------------------------------------------------
-    // 5. SCROLL PROGRESS & REVEAL OBSERVER
+    // 5. SCROLL PROGRESS & REVEAL OBSERVER (Throttled for 60-120fps)
     // -------------------------------------------------------------
+    let scrollScheduled = false;
     window.addEventListener('scroll', () => {
-      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      document.getElementById('scrollProgress').style.width = scrolled + '%';
+      if (!scrollScheduled) {
+        scrollScheduled = true;
+        requestAnimationFrame(() => {
+          const winScroll = window.scrollY || document.documentElement.scrollTop;
+          const height = document.documentElement.scrollHeight - window.innerHeight;
+          if (height > 0) {
+            const scrolled = (winScroll / height) * 100;
+            const sp = document.getElementById('scrollProgress');
+            if (sp) sp.style.width = scrolled + '%';
+          }
 
-      const nav = document.getElementById('mainNav');
-      if (winScroll > 60) {
-        nav.classList.add('py-2');
-        nav.classList.remove('py-5');
-      } else {
-        nav.classList.add('py-5');
-        nav.classList.remove('py-2');
+          const nav = document.getElementById('mainNav');
+          if (nav) {
+            nav.classList.toggle('nav-compact', winScroll > 45);
+          }
+          scrollScheduled = false;
+        });
       }
-    });
+    }, { passive: true });
 
     const scrollObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -3567,159 +3706,133 @@
           }
         }
       });
-    }, { root: null, threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    }, { root: null, threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
 
     document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale').forEach(el => {
       scrollObserver.observe(el);
     });
 
     // =============================================================
-    // IMPRESSIVE MOUSE HOVER EFFECTS — GPU-OPTIMIZED (zero layout reflow)
+    // IMPRESSIVE MOUSE HOVER EFFECTS (Desktop-only to ensure 0 lag on mobile)
     // =============================================================
+    if (!isMobileDevice && window.matchMedia('(pointer: fine)').matches) {
+      // ── 1. CUSTOM CURSOR + TRAIL ──
+      const cursorOuter = document.createElement('div');
+      const cursorInner = document.createElement('div');
+      cursorOuter.id = 'cursorOuter';
+      cursorInner.id = 'cursorInner';
+      cursorOuter.style.cssText += '; left:0; top:0;';
+      cursorInner.style.cssText += '; left:0; top:0;';
+      document.body.appendChild(cursorOuter);
+      document.body.appendChild(cursorInner);
 
-    // ── 1. CUSTOM CURSOR + TRAIL (uses transform3d — compositor only, no reflow) ──
-    const cursorOuter = document.createElement('div');
-    const cursorInner = document.createElement('div');
-    cursorOuter.id = 'cursorOuter';
-    cursorInner.id = 'cursorInner';
-    // Pin to top-left and use transforms only
-    cursorOuter.style.cssText += '; left:0; top:0;';
-    cursorInner.style.cssText += '; left:0; top:0;';
-    document.body.appendChild(cursorOuter);
-    document.body.appendChild(cursorInner);
-
-    const TRAIL_COUNT = 8;
-    const trailDots = [];
-    for (let i = 0; i < TRAIL_COUNT; i++) {
-      const dot = document.createElement('div');
-      dot.className = 'cursor-trail-dot';
-      const frac = 1 - i / TRAIL_COUNT;
-      dot.style.cssText = `
-        left:0; top:0;
-        opacity:${frac * 0.55};
-        width:${Math.max(2, 5 - i * 0.4)}px;
-        height:${Math.max(2, 5 - i * 0.4)}px;
-      `;
-      document.body.appendChild(dot);
-      trailDots.push({ el: dot, x: -100, y: -100 });
-    }
-
-    // Raw mouse position — updated on every mousemove (synchronous)
-    let mouseX = -200, mouseY = -200;
-    // Smoothed positions for outer ring & trail
-    let outerX = -200, outerY = -200;
-
-    document.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      // Inner dot: zero-lag, moves exactly with mouse via transform
-      cursorInner.style.transform = `translate3d(${mouseX}px,${mouseY}px,0) translate(-50%,-50%)`;
-    }, { passive: true });
-
-    // Single rAF loop for everything smooth
-    function cursorLoop() {
-      // Outer ring: smooth lerp, but fast enough to feel snappy (0.22)
-      outerX += (mouseX - outerX) * 0.22;
-      outerY += (mouseY - outerY) * 0.22;
-      cursorOuter.style.transform = `translate3d(${outerX}px,${outerY}px,0) translate(-50%,-50%)`;
-
-      // Trail: chain of dots each following the previous
-      trailDots[0].x += (mouseX - trailDots[0].x) * 0.55;
-      trailDots[0].y += (mouseY - trailDots[0].y) * 0.55;
-      trailDots[0].el.style.transform = `translate3d(${trailDots[0].x}px,${trailDots[0].y}px,0) translate(-50%,-50%)`;
-
-      for (let i = 1; i < TRAIL_COUNT; i++) {
-        const lerp = 0.42 - i * 0.03;
-        trailDots[i].x += (trailDots[i - 1].x - trailDots[i].x) * lerp;
-        trailDots[i].y += (trailDots[i - 1].y - trailDots[i].y) * lerp;
-        trailDots[i].el.style.transform = `translate3d(${trailDots[i].x}px,${trailDots[i].y}px,0) translate(-50%,-50%)`;
+      const TRAIL_COUNT = 6;
+      const trailDots = [];
+      for (let i = 0; i < TRAIL_COUNT; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'cursor-trail-dot';
+        const frac = 1 - i / TRAIL_COUNT;
+        dot.style.cssText = `
+          left:0; top:0;
+          opacity:${frac * 0.5};
+          width:${Math.max(2, 4 - i * 0.4)}px;
+          height:${Math.max(2, 4 - i * 0.4)}px;
+        `;
+        document.body.appendChild(dot);
+        trailDots.push({ el: dot, x: -100, y: -100 });
       }
 
-      requestAnimationFrame(cursorLoop);
-    }
-    cursorLoop();
+      let mouseX = -200, mouseY = -200;
+      let outerX = -200, outerY = -200;
 
-    // Cursor state changes on hover / click
-    const interactiveSelectors = 'a, button, [onclick], .tilt-card, input, select, textarea, label';
-    document.querySelectorAll(interactiveSelectors).forEach(el => {
-      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-    });
-    new MutationObserver(() => {
-      document.querySelectorAll(interactiveSelectors).forEach(el => {
-        if (!el._cursorBound) {
-          el._cursorBound = true;
-          el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-          el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+      document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        cursorInner.style.transform = `translate3d(${mouseX}px,${mouseY}px,0) translate(-50%,-50%)`;
+      }, { passive: true });
+
+      function cursorLoop() {
+        outerX += (mouseX - outerX) * 0.22;
+        outerY += (mouseY - outerY) * 0.22;
+        cursorOuter.style.transform = `translate3d(${outerX}px,${outerY}px,0) translate(-50%,-50%)`;
+
+        trailDots[0].x += (mouseX - trailDots[0].x) * 0.55;
+        trailDots[0].y += (mouseY - trailDots[0].y) * 0.55;
+        trailDots[0].el.style.transform = `translate3d(${trailDots[0].x}px,${trailDots[0].y}px,0) translate(-50%,-50%)`;
+
+        for (let i = 1; i < TRAIL_COUNT; i++) {
+          const lerp = 0.42 - i * 0.03;
+          trailDots[i].x += (trailDots[i - 1].x - trailDots[i].x) * lerp;
+          trailDots[i].y += (trailDots[i - 1].y - trailDots[i].y) * lerp;
+          trailDots[i].el.style.transform = `translate3d(${trailDots[i].x}px,${trailDots[i].y}px,0) translate(-50%,-50%)`;
         }
+        requestAnimationFrame(cursorLoop);
+      }
+      cursorLoop();
+
+      const interactiveSelectors = 'a, button, [onclick], .tilt-card, input, select, textarea, label';
+      document.querySelectorAll(interactiveSelectors).forEach(el => {
+        el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+        el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
       });
-    }).observe(document.body, { childList: true, subtree: true });
 
-    document.addEventListener('mousedown', () => document.body.classList.add('cursor-click'));
-    document.addEventListener('mouseup', () => document.body.classList.remove('cursor-click'));
-
-    // ── 2. CLICK RIPPLE BURST ──
-    document.addEventListener('click', (e) => {
-      const r1 = document.createElement('div');
-      r1.className = 'click-ripple';
-      r1.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;width:60px;height:60px;border:1.5px solid rgba(56,189,248,0.7);`;
-      document.body.appendChild(r1);
-      const r2 = document.createElement('div');
-      r2.className = 'click-ripple';
-      r2.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;width:100px;height:100px;border:1px solid rgba(129,140,248,0.4);animation-delay:0.08s;`;
-      document.body.appendChild(r2);
-      setTimeout(() => { r1.remove(); r2.remove(); }, 750);
-    });
-
-    // ── 3. MAGNETIC EFFECT ON NAV BUTTONS ──
-    document.querySelectorAll('header button, header a').forEach(btn => {
-      btn.addEventListener('mousemove', (e) => {
-        const rect = btn.getBoundingClientRect();
-        const dx = (e.clientX - (rect.left + rect.width / 2)) * 0.28;
-        const dy = (e.clientY - (rect.top + rect.height / 2)) * 0.28;
-        btn.style.transform = `translate(${dx}px,${dy}px) scale(1.06)`;
+      // ── 2. CLICK RIPPLE BURST ──
+      document.addEventListener('click', (e) => {
+        const r1 = document.createElement('div');
+        r1.className = 'click-ripple';
+        r1.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;width:60px;height:60px;border:1.5px solid rgba(56,189,248,0.7);`;
+        document.body.appendChild(r1);
+        setTimeout(() => { r1.remove(); }, 650);
       });
-      btn.addEventListener('mouseleave', () => {
-        btn.style.transition = 'transform 0.45s cubic-bezier(0.16,1,0.3,1)';
-        btn.style.transform = '';
-        setTimeout(() => btn.style.transition = '', 450);
+
+      // ── 3. MAGNETIC EFFECT ON NAV BUTTONS ──
+      document.querySelectorAll('header button, header a').forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+          const rect = btn.getBoundingClientRect();
+          const dx = (e.clientX - (rect.left + rect.width / 2)) * 0.22;
+          const dy = (e.clientY - (rect.top + rect.height / 2)) * 0.22;
+          btn.style.transform = `translate(${dx}px,${dy}px) scale(1.04)`;
+        });
+        btn.addEventListener('mouseleave', () => {
+          btn.style.transition = 'transform 0.4s cubic-bezier(0.16,1,0.3,1)';
+          btn.style.transform = '';
+          setTimeout(() => btn.style.transition = '', 400);
+        });
       });
-    });
 
-    // ── 4. SPOTLIGHT EFFECT — throttled to mousemove only (not rAF) ──
-    const spotlightCanvas = document.createElement('canvas');
-    spotlightCanvas.id = 'mouseSpotlight';
-    spotlightCanvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;';
-    document.body.insertBefore(spotlightCanvas, document.body.children[2]);
-    const sCtx = spotlightCanvas.getContext('2d');
+      // ── 4. SPOTLIGHT EFFECT (Throttled) ──
+      const spotlightCanvas = document.createElement('canvas');
+      spotlightCanvas.id = 'mouseSpotlight';
+      spotlightCanvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;';
+      document.body.insertBefore(spotlightCanvas, document.body.children[2]);
+      const sCtx = spotlightCanvas.getContext('2d');
 
-    function resizeSpotlight() {
-      spotlightCanvas.width = window.innerWidth;
-      spotlightCanvas.height = window.innerHeight;
+      function resizeSpotlight() {
+        spotlightCanvas.width = window.innerWidth;
+        spotlightCanvas.height = window.innerHeight;
+      }
+      resizeSpotlight();
+      window.addEventListener('resize', resizeSpotlight, { passive: true });
+
+      function drawSpotlight(mx, my) {
+        sCtx.clearRect(0, 0, spotlightCanvas.width, spotlightCanvas.height);
+        const g = sCtx.createRadialGradient(mx, my, 0, mx, my, 300);
+        g.addColorStop(0, 'rgba(56,189,248,0.05)');
+        g.addColorStop(0.4, 'rgba(129,140,248,0.02)');
+        g.addColorStop(1, 'rgba(0,0,0,0)');
+        sCtx.fillStyle = g;
+        sCtx.fillRect(0, 0, spotlightCanvas.width, spotlightCanvas.height);
+      }
+      let spThrottle = false;
+      document.addEventListener('mousemove', (e) => {
+        if (spThrottle) return;
+        spThrottle = true;
+        requestAnimationFrame(() => {
+          drawSpotlight(e.clientX, e.clientY);
+          spThrottle = false;
+        });
+      }, { passive: true });
     }
-    resizeSpotlight();
-    window.addEventListener('resize', resizeSpotlight, { passive: true });
-
-    function drawSpotlight(mx, my) {
-      sCtx.clearRect(0, 0, spotlightCanvas.width, spotlightCanvas.height);
-      const g = sCtx.createRadialGradient(mx, my, 0, mx, my, 320);
-      g.addColorStop(0, 'rgba(56,189,248,0.05)');
-      g.addColorStop(0.4, 'rgba(129,140,248,0.02)');
-      g.addColorStop(1, 'rgba(0,0,0,0)');
-      sCtx.fillStyle = g;
-      sCtx.fillRect(0, 0, spotlightCanvas.width, spotlightCanvas.height);
-    }
-    // Draw spotlight only on mousemove (throttled) — not every rAF frame
-    let spThrottle = false;
-    document.addEventListener('mousemove', (e) => {
-      if (spThrottle) return;
-      spThrottle = true;
-      requestAnimationFrame(() => {
-        drawSpotlight(e.clientX, e.clientY);
-        spThrottle = false;
-      });
-    }, { passive: true });
-    drawSpotlight(window.innerWidth / 2, window.innerHeight / 2);
 
 
     // -------------------------------------------------------------
@@ -4967,10 +5080,18 @@
         if (exited) return;
         exited = true;
 
-        document.body.style.overflow = '';
+        // Trigger 1.2s smooth cinematic dissolve
         stage.classList.add('exit');
 
+        // Unlock page scroll smoothly
         setTimeout(() => {
+          document.body.style.overflow = '';
+        }, 400);
+
+        let cleaned = false;
+        function cleanup() {
+          if (cleaned) return;
+          cleaned = true;
           if (video) {
             video.pause();
             try { video.removeAttribute('src'); video.load(); } catch (e) { }
@@ -4978,7 +5099,10 @@
           if (stage && stage.parentNode) {
             stage.parentNode.removeChild(stage);
           }
-        }, 750);
+        }
+
+        stage.addEventListener('transitionend', cleanup, { once: true });
+        setTimeout(cleanup, 1300);
       }
 
       // Tap / Click anywhere on screen to skip

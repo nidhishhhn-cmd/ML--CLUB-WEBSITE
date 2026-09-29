@@ -78,3 +78,6 @@ desktop.ini
 *.sw?
 *.bak
 *.tmp
+
+.vercel
+.env*
