@@ -1140,14 +1140,13 @@
   <!-- ========================================================================= -->
   <div id="intro-stage" style="cursor: pointer;" title="Tap anywhere to skip intro">
     <!-- Fullscreen Pure Video Player (Direct Autoplay, Tap Anywhere to Skip) -->
-    <video id="introVideo" autoplay muted playsinline webkit-playsinline preload="auto" disablePictureInPicture style="pointer-events: none;">
-      <source src="images/hero-video.mp4.mp4" type="video/mp4">
+    <video id="introVideo" autoplay muted defaultMuted playsinline webkit-playsinline preload="auto" disablePictureInPicture style="pointer-events: none;">
+      <source src="images/hero-video.mp4.MP4" type="video/mp4">
       <source src="images/hero-video.mp4" type="video/mp4">
-      <source src="images/hero.mp4.mp4" type="video/mp4">
-      <source src="images/hero.mp4" type="video/mp4">
+      <source src="images/hero-video.mp4.mp4" type="video/mp4">
       <source src="hero-video.mp4.mp4" type="video/mp4">
-      <source src="hero.mp4" type="video/mp4">
-      <source src="../ml2/hero.mp4" type="video/mp4">
+      <source src="hero-video.mp4" type="video/mp4">
+      <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4" type="video/mp4">
     </video>
   </div>
 
@@ -4996,30 +4995,58 @@
 
       // Directly Play Video immediately
       video.muted = true;
+      video.defaultMuted = true;
       video.playsInline = true;
-      video.currentTime = 0;
+      video.setAttribute('muted', '');
+      video.setAttribute('playsinline', '');
+      video.setAttribute('webkit-playsinline', '');
 
-      function startPlayback() {
-        const promise = video.play();
-        if (promise !== undefined) {
-          promise.catch(() => {
-            // If browser autoplay policy requires user interaction, start on first tap
-            window.addEventListener('click', () => { video.play(); }, { once: true });
+      const CDN_URL = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4';
+
+      function forcePlay() {
+        if (exited) return;
+        video.muted = true;
+        const p = video.play();
+        if (p !== undefined) {
+          p.catch((err) => {
+            console.warn('[Intro] Autoplay waiting for interaction:', err);
           });
         }
       }
 
-      if (video.readyState >= 2) {
-        startPlayback();
-      } else {
-        video.addEventListener('canplay', startPlayback, { once: true });
-        video.addEventListener('loadedmetadata', startPlayback, { once: true });
-      }
+      // Try immediately and on all readiness events
+      forcePlay();
+      video.addEventListener('loadedmetadata', forcePlay);
+      video.addEventListener('loadeddata', forcePlay);
+      video.addEventListener('canplay', forcePlay);
+      video.addEventListener('canplaythrough', forcePlay);
+      window.addEventListener('DOMContentLoaded', forcePlay);
+      window.addEventListener('load', forcePlay);
 
-      // Fallback timer: if video finishes or fails to load, exit gracefully after 30s
+      // If local source fails or errors, immediately fallback to high-speed CDN stream
+      video.addEventListener('error', () => {
+        console.warn('[Intro] Source error, switching to CDN stream...');
+        if (video.src !== CDN_URL) {
+          video.src = CDN_URL;
+          video.load();
+          forcePlay();
+        }
+      }, true);
+
+      // If video hasn't started playing within 2s, switch to CDN stream directly
+      setTimeout(() => {
+        if (!exited && video.paused && video.currentTime === 0) {
+          console.warn('[Intro] Stalled, switching to CDN stream directly...');
+          video.src = CDN_URL;
+          video.load();
+          forcePlay();
+        }
+      }, 2000);
+
+      // Fallback timer: if video finishes or fails to load, exit gracefully after 35s
       setTimeout(() => {
         if (!exited) exitIntro();
-      }, 30000);
+      }, 35000);
     })();
   </script>
 </body>
