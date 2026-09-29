@@ -919,6 +919,9 @@
       background-color: #01040a;
       overflow: hidden;
       z-index: 99999;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
       transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), filter 0.85s ease, transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -1135,9 +1138,9 @@
   <!-- ========================================================================= -->
   <!-- CINEMATIC PURE VIDEO INTRO OVERLAY (HERO.MP4)                             -->
   <!-- ========================================================================= -->
-  <div id="intro-stage">
-    <!-- Fullscreen Pure Video Player (4K Hardware Accelerated & Frame-by-Frame Scrub) -->
-    <video id="introVideo" muted playsinline webkit-playsinline preload="auto" disablePictureInPicture>
+  <div id="intro-stage" style="cursor: pointer;" title="Tap anywhere to skip intro">
+    <!-- Fullscreen Pure Video Player (Direct Autoplay, Tap Anywhere to Skip) -->
+    <video id="introVideo" autoplay muted playsinline webkit-playsinline preload="auto" disablePictureInPicture style="pointer-events: none;">
       <source src="images/hero-video.mp4.mp4" type="video/mp4">
       <source src="images/hero-video.mp4" type="video/mp4">
       <source src="images/hero.mp4.mp4" type="video/mp4">
@@ -1146,51 +1149,6 @@
       <source src="hero.mp4" type="video/mp4">
       <source src="../ml2/hero.mp4" type="video/mp4">
     </video>
-
-    <!-- Top Telemetry & Controls -->
-    <div class="intro-top-bar">
-      <div class="flex items-center gap-3">
-        <div class="intro-telemetry-tag">
-          <span class="intro-pulse-dot"></span>
-          <span id="introTelemetryText">ML CLUB • 4K ULTRA-HD</span>
-        </div>
-        <span id="introResolutionBadge" class="intro-res-pill">Detecting 4K...</span>
-      </div>
-      <div class="flex items-center gap-2.5">
-        <!-- Optional Play / Pause toggle -->
-        <button class="intro-skip-btn" id="intro-autoplay-btn" title="Toggle automatic playback">
-          <i data-lucide="play" id="introPlayIcon" class="w-3.5 h-3.5"></i>
-          <span id="introPlayText">Auto Play</span>
-        </button>
-        <!-- Skip Button -->
-        <button class="intro-skip-btn" id="intro-btn-skip" title="Skip directly to website">
-          <span>Skip Intro</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="5 4 15 12 5 20 5 4"></polygon>
-            <line x1="19" y1="5" x2="19" y2="19"></line>
-          </svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- Floating Animated Scroll Down Pill with Live Scrub Percentage -->
-    <div class="intro-scroll-indicator" id="introScrollBtn"
-      title="Scroll down to scrub video frame-by-frame, or click to enter">
-      <span class="intro-scroll-text">
-        <span id="introScrollPercent">Scroll down to cut frames • 0%</span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 5v14"></path>
-          <path d="m19 12-7 7-7-7"></path>
-        </svg>
-      </span>
-    </div>
-
-    <!-- Video Progress Line at Bottom -->
-    <div class="intro-video-progress">
-      <div class="intro-video-progress-bar" id="introVideoProgressBar"></div>
-    </div>
   </div>
 
   <!-- Top Scroll Progress Indicator -->
@@ -4992,47 +4950,23 @@
   </script>
 
   <!-- ========================================================================= -->
-  <!-- CINEMATIC VIDEO INTRO CONTROLLER SCRIPT                                   -->
+  <!-- DIRECT AUTOPLAY CINEMATIC VIDEO INTRO (TAP ANYWHERE TO SKIP)               -->
   <!-- ========================================================================= -->
   <script>
-    (function initVideoFrameScrubIntro() {
+    (function initDirectVideoIntro() {
       const stage = document.getElementById('intro-stage');
       const video = document.getElementById('introVideo');
-      const btnSkip = document.getElementById('intro-btn-skip');
-      const btnScroll = document.getElementById('introScrollBtn');
-      const btnAutoPlay = document.getElementById('intro-autoplay-btn');
-      const playIcon = document.getElementById('introPlayIcon');
-      const playText = document.getElementById('introPlayText');
-      const progressBar = document.getElementById('introVideoProgressBar');
-      const scrollPercentEl = document.getElementById('introScrollPercent');
-      const telemetryEl = document.getElementById('introTelemetryText');
-      const resBadgeEl = document.getElementById('introResolutionBadge');
 
       if (!stage || !video) return;
 
-      // Lock body scrolling while scrubbing intro
+      // Lock body scrolling while intro is playing
       document.body.style.overflow = 'hidden';
 
       let exited = false;
-      let isAutoPlaying = false;
-      let autoPlayAnimId = null;
-
-      // Expanded scroll track: 5600 pixels (requires more scrolls, giving deep filmic control)
-      const TOTAL_SCROLL = 5600;
-      let accumulatedScroll = 0;
-      let targetTime = 0;
-      let renderedTime = 0;
-      let isSeeking = false;
-      let pendingSeekTime = null;
-
-      // Target frame rate for precise frame cuts
-      const FPS = 30;
-      const FRAME_STEP = 1 / FPS;
 
       function exitIntro() {
         if (exited) return;
         exited = true;
-        if (autoPlayAnimId) cancelAnimationFrame(autoPlayAnimId);
 
         document.body.style.overflow = '';
         stage.classList.add('exit');
@@ -5045,244 +4979,47 @@
           if (stage && stage.parentNode) {
             stage.parentNode.removeChild(stage);
           }
-        }, 850);
+        }, 750);
       }
 
-      if (btnSkip) {
-        btnSkip.addEventListener('click', (e) => {
-          e.stopPropagation();
-          exitIntro();
-        });
-      }
-
-      if (btnScroll) {
-        btnScroll.addEventListener('click', (e) => {
-          e.stopPropagation();
-          if (accumulatedScroll >= TOTAL_SCROLL * 0.96) {
-            exitIntro();
-          } else {
-            // Advance scroll by 25%
-            addScrollDelta(TOTAL_SCROLL * 0.25);
-          }
-        });
-      }
-
-      function updateUI(progress) {
-        const pct = Math.round(Math.min(progress, 1) * 100);
-        if (progressBar) progressBar.style.width = pct + '%';
-
-        let totalFrames = 150;
-        let currentFrame = 0;
-        if (video.duration && !isNaN(video.duration)) {
-          totalFrames = Math.max(1, Math.round(video.duration * FPS));
-          currentFrame = Math.min(totalFrames, Math.round(targetTime * FPS));
-        }
-
-        if (scrollPercentEl) {
-          if (progress >= 0.98) {
-            scrollPercentEl.textContent = 'End of Video • Scroll down to enter';
-          } else {
-            scrollPercentEl.textContent = `Scroll to cut • Frame ${currentFrame}/${totalFrames} (${pct}%)`;
-          }
-        }
-
-        if (telemetryEl && video.duration && !isNaN(video.duration)) {
-          const mm = String(Math.floor(targetTime / 60)).padStart(2, '0');
-          const ss = String(Math.floor(targetTime % 60)).padStart(2, '0');
-          const ff = String(Math.floor((targetTime % 1) * FPS)).padStart(2, '0');
-          telemetryEl.textContent = `TC ${mm}:${ss}:${ff} // FRAME ${currentFrame}/${totalFrames}`;
-        }
-      }
-
-      function addScrollDelta(delta) {
-        if (exited) return;
-
-        if (isAutoPlaying) {
-          stopAutoPlay();
-        }
-
-        accumulatedScroll += delta;
-        accumulatedScroll = Math.max(0, Math.min(accumulatedScroll, TOTAL_SCROLL + 220));
-
-        const progress = Math.min(accumulatedScroll / TOTAL_SCROLL, 1);
-        if (video.duration && !isNaN(video.duration)) {
-          // Quantize strictly to exact discrete frames
-          const rawTarget = progress * Math.max(0, video.duration - 0.04);
-          targetTime = Math.round(rawTarget / FRAME_STEP) * FRAME_STEP;
-        }
-        updateUI(progress);
-
-        // Once scrolled past the full video sequence, enter website
-        if (accumulatedScroll >= TOTAL_SCROLL + 120) {
-          exitIntro();
-        }
-      }
-
-      // 1. Mouse Wheel Scroll (weighted with higher precision for more scrolls)
-      window.addEventListener('wheel', (e) => {
-        if (exited) return;
-        addScrollDelta(e.deltaY * 0.65);
-      }, { passive: true });
-
-      // 2. Touchpad & Mobile Touch Gesture
-      let touchStartY = 0;
-      window.addEventListener('touchstart', (e) => {
-        if (e.touches && e.touches[0]) {
-          touchStartY = e.touches[0].clientY;
-        }
-      }, { passive: true });
-
-      window.addEventListener('touchmove', (e) => {
-        if (exited || !e.touches || !e.touches[0]) return;
-        const currentY = e.touches[0].clientY;
-        const delta = (touchStartY - currentY) * 1.1;
-        touchStartY = currentY;
-        addScrollDelta(delta);
-      }, { passive: true });
-
-      // 3. Keyboard Arrow Keys
+      // Tap / Click anywhere on screen to skip
+      stage.addEventListener('click', exitIntro);
+      stage.addEventListener('touchstart', exitIntro, { passive: true });
       window.addEventListener('keydown', (e) => {
-        if (exited) return;
-        if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
-          addScrollDelta(100);
-        } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
-          addScrollDelta(-100);
-        } else if (e.key === 'Enter') {
+        if (!exited && (e.key === ' ' || e.key === 'Enter' || e.key === 'Escape')) {
           exitIntro();
         }
       });
 
-      // 4. Dedicated Frame-by-Frame Cut Engine (seek queue to ensure crisp cuts)
-      function applySeek(t) {
-        if (video.readyState >= 2) {
-          if (!isSeeking) {
-            isSeeking = true;
-            renderedTime = t;
-            video.currentTime = t;
-          } else {
-            pendingSeekTime = t;
-          }
-        }
-      }
-
-      video.addEventListener('seeked', () => {
-        isSeeking = false;
-        if (pendingSeekTime !== null) {
-          const next = pendingSeekTime;
-          pendingSeekTime = null;
-          applySeek(next);
-        }
-      });
-
-      function renderFrameCutLoop() {
-        if (exited) return;
-
-        if (!isAutoPlaying) {
-          // If target frame differs from currently rendered time by more than half a frame
-          if (Math.abs(targetTime - renderedTime) >= FRAME_STEP * 0.5) {
-            applySeek(targetTime);
-          }
-        }
-
-        requestAnimationFrame(renderFrameCutLoop);
-      }
-      requestAnimationFrame(renderFrameCutLoop);
-
-      // 5. Auto Play Toggle
-      function startAutoPlay() {
-        isAutoPlaying = true;
-        video.play().catch(() => { });
-        if (playText) playText.textContent = 'Pause';
-        if (playIcon) playIcon.setAttribute('data-lucide', 'pause');
-        if (window.lucide) lucide.createIcons();
-
-        function syncAutoPlayProgress() {
-          if (!isAutoPlaying || exited) return;
-          if (video.duration) {
-            const p = video.currentTime / video.duration;
-            accumulatedScroll = p * TOTAL_SCROLL;
-            targetTime = renderedTime = video.currentTime;
-            updateUI(p);
-          }
-          autoPlayAnimId = requestAnimationFrame(syncAutoPlayProgress);
-        }
-        autoPlayAnimId = requestAnimationFrame(syncAutoPlayProgress);
-      }
-
-      function stopAutoPlay() {
-        isAutoPlaying = false;
-        video.pause();
-        if (autoPlayAnimId) cancelAnimationFrame(autoPlayAnimId);
-        if (playText) playText.textContent = 'Auto Play';
-        if (playIcon) playIcon.setAttribute('data-lucide', 'play');
-        if (window.lucide) lucide.createIcons();
-      }
-
-      if (btnAutoPlay) {
-        btnAutoPlay.addEventListener('click', (e) => {
-          e.stopPropagation();
-          if (isAutoPlaying) {
-            stopAutoPlay();
-          } else {
-            startAutoPlay();
-          }
-        });
-      }
-
+      // When video ends naturally, transition into website
       video.addEventListener('ended', exitIntro);
 
+      // Directly Play Video immediately
+      video.muted = true;
+      video.playsInline = true;
+      video.currentTime = 0;
 
-      // Check and display source video native resolution
-      function detectVideoResolution() {
-        if (video.videoWidth && video.videoHeight) {
-          const w = video.videoWidth;
-          const h = video.videoHeight;
-          const dpr = window.devicePixelRatio || 1;
-          const screenW = Math.round(window.innerWidth * dpr);
-          const screenH = Math.round(window.innerHeight * dpr);
-
-          let resLabel = '';
-          if (w >= 3840 || h >= 2160) {
-            resLabel = `4K UHD (${w}×${h}) • TRUE 4K`;
-          } else if (w >= 2560 || h >= 1440) {
-            resLabel = `2.5K QHD (${w}×${h})`;
-          } else if (w >= 1920 || h >= 1080) {
-            resLabel = `1080p FHD (${w}×${h}) • UPSCALE`;
-          } else {
-            resLabel = `${w}×${h} • RE-EXPORT IN 4K`;
-          }
-
-          if (resBadgeEl) {
-            resBadgeEl.textContent = resLabel;
-            if (w < 2560) {
-              resBadgeEl.title = `Current video is ${w}x${h}. For crisp 4K, export hero video at 3840x2160.`;
-            }
-          }
-          console.log(`[ML CLUB 4K INTRO] Native Source: ${w}x${h} | Viewport Target: ${screenW}x${screenH} (@${dpr}x DPR)`);
+      function startPlayback() {
+        const promise = video.play();
+        if (promise !== undefined) {
+          promise.catch(() => {
+            // If browser autoplay policy requires user interaction, start on first tap
+            window.addEventListener('click', () => { video.play(); }, { once: true });
+          });
         }
       }
 
-      // Initial frame load
-      function initFirstFrame() {
-        video.pause();
-        detectVideoResolution();
-        if (video.readyState >= 1) {
-          video.currentTime = 0.001;
-          updateUI(0);
-        }
-      }
-
-      video.addEventListener('loadedmetadata', detectVideoResolution);
-      video.addEventListener('loadeddata', detectVideoResolution);
-
-      if (video.readyState >= 1) {
-        initFirstFrame();
+      if (video.readyState >= 2) {
+        startPlayback();
       } else {
-        video.addEventListener('loadedmetadata', initFirstFrame, { once: true });
-        video.addEventListener('canplay', initFirstFrame, { once: true });
+        video.addEventListener('canplay', startPlayback, { once: true });
+        video.addEventListener('loadedmetadata', startPlayback, { once: true });
       }
 
-      if (window.lucide) lucide.createIcons();
+      // Fallback timer: if video finishes or fails to load, exit gracefully after 30s
+      setTimeout(() => {
+        if (!exited) exitIntro();
+      }, 30000);
     })();
   </script>
 </body>
