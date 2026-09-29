@@ -75,11 +75,19 @@
       padding: 0;
     }
 
+    html {
+      scroll-behavior: smooth;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+    }
+
     body {
       background-color: hsl(var(--background));
       color: hsl(var(--foreground));
       font-family: var(--font-body);
-      overflow-x: hidden;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      min-height: 100vh;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
@@ -152,7 +160,7 @@
     /* 3D Tilt Card Effect */
     .tilt-card {
       transform-style: preserve-3d;
-      transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+      transition: box-shadow 0.25s ease-out;
     }
 
     .tilt-card:hover {
@@ -440,73 +448,126 @@
       transform: translateY(-50%) translateX(0);
     }
 
+    /* ============================================================
+       CLEAN INVERTED FOCUS RING (Minimalist Apple / Awwwards Lens)
+       ============================================================ */
     #cursorOuter {
       position: fixed;
       left: 0;
       top: 0;
-      width: 36px;
-      height: 36px;
-      border: 1.5px solid rgba(56, 189, 248, 0.7);
+      width: 34px;
+      height: 34px;
+      border: 1.5px solid #ffffff;
       border-radius: 50%;
       pointer-events: none;
       z-index: 99999;
-      will-change: transform;
-      mix-blend-mode: screen;
-      transition: width 0.2s ease, height 0.2s ease,
-        border-color 0.2s ease, background 0.2s ease;
+      will-change: transform, width, height;
+      mix-blend-mode: difference;
+      background: transparent;
+      transition: width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                  height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                  background-color 0.22s ease,
+                  border-color 0.22s ease,
+                  opacity 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     #cursorInner {
       position: fixed;
       left: 0;
       top: 0;
-      width: 7px;
-      height: 7px;
-      background: #38bdf8;
+      width: 6px;
+      height: 6px;
+      background: #ffffff;
       border-radius: 50%;
       pointer-events: none;
-      z-index: 99999;
+      z-index: 100000;
       will-change: transform;
-      box-shadow: 0 0 10px 3px rgba(56, 189, 248, 0.7);
-      /* NO transition on transform — inner dot must be instant */
-      transition: width 0.12s ease, height 0.12s ease, background 0.15s ease;
+      mix-blend-mode: difference;
+      transition: opacity 0.2s ease, transform 0.2s ease;
     }
 
+    /* Hovering over clickable items: Expands into inverted magnifying disc */
     body.cursor-hover #cursorOuter {
-      width: 56px;
-      height: 56px;
-      background: rgba(56, 189, 248, 0.06);
-      border-color: rgba(129, 140, 248, 0.9);
+      width: 58px;
+      height: 58px;
+      background: #ffffff;
+      border-color: transparent;
     }
 
     body.cursor-hover #cursorInner {
-      width: 10px;
-      height: 10px;
-      background: #818cf8;
+      opacity: 0;
+      transform: scale(0);
     }
 
+    /* Mousedown / Click state: Snappy physical compression */
     body.cursor-click #cursorOuter {
-      width: 18px;
-      height: 18px;
-      background: rgba(56, 189, 248, 0.25);
+      width: 24px;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.9);
+      border-color: transparent;
     }
 
-    body.cursor-click #cursorInner {
-      width: 4px;
-      height: 4px;
-    }
-
-    /* Trail dots */
-    .cursor-trail-dot {
+    /* Click ripple wave */
+    .click-ripple {
       position: fixed;
-      left: 0;
-      top: 0;
       border-radius: 50%;
       pointer-events: none;
       z-index: 99998;
-      will-change: transform;
-      background: rgba(56, 189, 248, 0.55);
-      box-shadow: 0 0 5px 1px rgba(56, 189, 248, 0.3);
+      mix-blend-mode: difference;
+      border: 1.5px solid #ffffff;
+      transform: translate(-50%, -50%) scale(0);
+      animation: ripple-wave 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes ripple-wave {
+      0% {
+        transform: translate(-50%, -50%) scale(0.2);
+        opacity: 0.9;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1.6);
+        opacity: 0;
+      }
+    }
+
+    /* ── PURE TRANSPARENT NAVBAR (No pill, no liquid background behind text, 100% clean floating) ── */
+    #mainNav,
+    #mainNav header,
+    #mainNav nav,
+    #mainNav nav.liquid-glass {
+      border: none !important;
+      border-color: transparent !important;
+      border-width: 0 !important;
+      outline: none !important;
+      box-shadow: none !important;
+      background: transparent !important;
+      background-color: transparent !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+
+    #mainNav nav::before,
+    #mainNav nav.liquid-glass::before,
+    #mainNav nav::after,
+    #mainNav nav.liquid-glass::after {
+      display: none !important;
+      content: none !important;
+      border: none !important;
+      opacity: 0 !important;
+    }
+
+    /* ── BRAND LOGO & NAV CONTENT LOCK (100% STATIC, ZERO HOVER DISPLACEMENT) ── */
+    #mainNav a,
+    #mainNav button,
+    #navLogo,
+    #navLogo *,
+    .no-magnetic,
+    .no-magnetic * {
+      transform: none !important;
+      -webkit-transform: none !important;
     }
 
     /* ── SPOTLIGHT OVERLAY ── */
@@ -1272,23 +1333,25 @@
 
 <body class="relative selection:bg-cyan-500/30 selection:text-white">
 
-  <!-- ========================================================================= -->
-  <!-- CINEMATIC ENTRANCE INTRO SPLASH OVERLAY                                   -->
-  <!-- ========================================================================= -->
-  <!-- CINEMATIC PURE VIDEO INTRO OVERLAY (HERO.MP4)                             -->
-  <!-- ========================================================================= -->
-  <div id="intro-stage" style="cursor: pointer;" title="Tap anywhere to skip intro">
-    <!-- Fullscreen Pure Video Player (Direct Autoplay, Tap Anywhere to Skip) -->
-    <video id="introVideo" autoplay muted defaultMuted playsinline webkit-playsinline preload="auto" disablePictureInPicture style="pointer-events: none;">
-      <source src="images/hero-video.mp4.MP4" type="video/mp4">
-      <source src="images/hero-video.mp4" type="video/mp4">
-      <source src="images/hero-video.mp4.mp4" type="video/mp4">
-      <source src="/images/hero-video.mp4.MP4" type="video/mp4">
-    </video>
-  </div>
+  <!-- Background and Navigation layers -->
 
   <!-- Top Scroll Progress Indicator -->
   <div id="scrollProgress"></div>
+
+  <!-- ========================================================================= -->
+  <!-- CINEMATIC PURE VIDEO INTRO (High Quality Fullscreen, Sound On, No UI)     -->
+  <!-- ========================================================================= -->
+  <div id="intro-stage" style="cursor: default;">
+    <!-- Fullscreen High-Quality Pure Video Player (Unmuted Sound Effects & Music, No PIP / No Overlay) -->
+    <video id="introVideo" autoplay playsinline webkit-playsinline disablePictureInPicture controlsList="nodownload noplaybackrate nofullscreen" preload="auto" style="width:100vw; height:100vh; object-fit:cover; pointer-events:none; image-rendering: -webkit-optimize-contrast;">
+      <source src="images/hero-video.mp4.mp4" type="video/mp4">
+      <source src="images/hero-video.mp4" type="video/mp4">
+      <source src="images/video.mp4" type="video/mp4">
+      <source src="hero-video.mp4.mp4" type="video/mp4">
+      <source src="hero-video.mp4" type="video/mp4">
+      <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4" type="video/mp4">
+    </video>
+  </div>
 
 
 
@@ -1321,28 +1384,28 @@
   <!-- ========================================================================= -->
   <!-- STICKY GLASSMORPHIC NAVIGATION BAR (ONLY "ML CLUB" IN TOP-LEFT CORNER)    -->
   <!-- ========================================================================= -->
-  <header id="mainNav" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-3 sm:py-4">
+  <header id="mainNav" class="absolute top-0 left-0 right-0 z-50 transition-all duration-300 py-4 sm:py-5 px-4 sm:px-8 lg:px-12 bg-transparent border-0">
     <nav
-      class="flex flex-row items-center justify-between px-5 sm:px-7 py-2 sm:py-2.5 max-w-7xl mx-auto w-full liquid-glass rounded-full">
+      class="flex flex-row items-center justify-between w-full bg-transparent border-0 shadow-none">
 
-      <!-- LOGO: EXCLUSIVELY "ML CLUB" (NO SIT ML CLUB) IN TOP LEFT CORNER -->
-      <a href="#hero"
-        class="group flex items-center gap-2.5 text-foreground no-underline focus:outline-none shrink-0 whitespace-nowrap">
-        <!-- Circular Club Logo Badge -->
+      <!-- LOGO: NAVATVA CLUB IN TOP LEFT CORNER (PERFECTLY ANCHORED LEFT-TOP) -->
+      <a href="#hero" id="navLogo"
+        class="no-magnetic flex items-center gap-3 text-foreground no-underline focus:outline-none shrink-0 whitespace-nowrap">
+        <!-- Circular Club Logo Badge (Compact & Fixed) -->
         <div
-          class="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden border border-amber-400/50 bg-[#0a0a0f] flex items-center justify-center shrink-0 shadow-[0_0_10px_rgba(245,158,11,0.25)] group-hover:border-amber-300 group-hover:shadow-[0_0_16px_rgba(245,158,11,0.5)] transition-all">
-          <img src="images/ml_club_logo.png" onerror="this.onerror=null;this.src='images/ml_club_logo.jpg';" alt="NAVATVA - ML Club Logo"
-            class="w-full h-full object-cover select-none pointer-events-none" />
+          class="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden border border-amber-400/50 bg-[#0a0a0f] flex items-center justify-center shrink-0 shadow-[0_0_8px_rgba(245,158,11,0.25)]">
+          <img src="images/ml_club_logo.png" onerror="this.onerror=null;this.src='images/ml_club_logo.jpg';" alt="NAVATVA Club Logo"
+            class="w-full h-full object-cover select-none pointer-events-none"
+            style="image-rendering: -webkit-optimize-contrast;" />
         </div>
         <span
-          class="text-lg sm:text-xl tracking-tight text-white font-serif-heading font-normal group-hover:text-amber-300 transition-colors whitespace-nowrap inline-flex items-baseline">
-          ML CLUB<sup
-            class="text-[9px] text-amber-400/70 group-hover:text-amber-300 transition-colors ml-0.5">®</sup>
+          class="text-xl sm:text-2xl md:text-[26px] tracking-tight text-white font-serif-heading font-normal whitespace-nowrap inline-flex items-baseline leading-none">
+          NAVATVA CLUB
         </span>
       </a>
 
-      <!-- Desktop Navigation Links with Smooth Scroll -->
-      <div class="hidden md:flex items-center gap-4 lg:gap-6 text-xs lg:text-sm font-medium whitespace-nowrap shrink-0">
+      <!-- Desktop Navigation Links: Bigger text & staying at Home page -->
+      <div class="hidden md:flex flex-1 items-center justify-center gap-6 lg:gap-8 xl:gap-10 text-base lg:text-[17px] font-medium whitespace-nowrap px-6">
         <a href="#hero" class="nav-link text-foreground transition-colors hover:text-cyan-300">
           Home
         </a>
@@ -1361,17 +1424,13 @@
         <a href="#gallery" class="nav-link text-muted-foreground transition-colors hover:text-foreground">
           Visionaries
         </a>
-        <a href="#join" onclick="openRegistrationModal()"
-          class="nav-link text-muted-foreground transition-colors hover:text-foreground cursor-pointer">
-          Join Club
-        </a>
         <a href="members.html" class="nav-link text-muted-foreground transition-colors hover:text-foreground">
           Club Members
         </a>
       </div>
 
       <!-- Controls: Hidden Builder Toolbar (when logged in) + Audio Toggle + Primary CTA -->
-      <div class="flex items-center gap-2.5">
+      <div class="flex items-center gap-3 shrink-0">
 
         <!-- Builder Toolbar: completely hidden from public visitors, only visible when builder is logged in -->
         <div id="builderToolbar" class="hidden items-center gap-2">
@@ -1389,25 +1448,17 @@
           </button>
         </div>
 
-        <!-- Posh Ambient Music Synthesizer Toggle -->
-        <button id="audioBtn" onclick="toggleAudio()"
-          class="liquid-glass rounded-full p-2.5 text-xs text-muted-foreground hover:text-white hover:scale-105 transition-all"
-          title="Toggle Posh Ambient Music" aria-label="Toggle Ambient Music"
-          style="transition: box-shadow 0.6s ease, transform 0.2s ease;">
-          <i data-lucide="music" id="audioIcon" class="w-4 h-4"></i>
-        </button>
-
-        <!-- Primary CTA: Begin Journey (Opens Registration Modal) -->
+        <!-- Primary CTA: Begin Journey (Clean Transparent Outline, No Background) -->
         <button onclick="openRegistrationModal()"
-          class="hidden sm:flex liquid-glass rounded-full px-5 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm text-white hover:scale-[1.04] active:scale-95 transition-all cursor-pointer items-center gap-2 font-medium border-2 border-cyan-400/70 bg-gradient-to-r from-cyan-500/25 via-blue-600/30 to-purple-600/25 shadow-[0_0_20px_rgba(6,182,212,0.35)] hover:shadow-[0_0_30px_rgba(6,182,212,0.6)]">
-          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-          <span>Begin Journey</span>
-          <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-cyan-300"></i>
+          class="hidden sm:flex rounded-full px-5 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm text-amber-200 hover:text-white transition-all cursor-pointer items-center gap-2 font-medium border border-amber-400/50 hover:border-amber-300 bg-transparent hover:bg-transparent">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          <span class="tracking-wide">Begin Journey</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-amber-300"></i>
         </button>
 
         <!-- Mobile Menu Toggle -->
         <button onclick="toggleMobileMenu()"
-          class="md:hidden liquid-glass rounded-full p-2.5 text-foreground hover:scale-105"
+          class="md:hidden rounded-full p-2.5 text-foreground hover:scale-105 bg-transparent border border-white/20"
           aria-label="Open mobile menu">
           <i data-lucide="menu" class="w-5 h-5"></i>
         </button>
@@ -1428,8 +1479,6 @@
           class="text-sm text-muted-foreground hover:text-foreground py-1">Mentors</a>
         <a href="#gallery" onclick="toggleMobileMenu()"
           class="text-sm text-muted-foreground hover:text-foreground py-1">Visionaries</a>
-        <a href="#join" onclick="openRegistrationModal(); toggleMobileMenu()"
-          class="text-sm text-muted-foreground hover:text-foreground py-1 cursor-pointer">Join Club</a>
         <a href="members.html" onclick="toggleMobileMenu()"
           class="text-sm text-muted-foreground hover:text-foreground py-1">Club Members</a>
       </div>
@@ -1440,62 +1489,37 @@
   <!-- PAGE 1: CINEMATIC HERO SECTION                                           -->
   <!-- ========================================================================= -->
   <section id="hero"
-    class="relative min-h-screen flex flex-col justify-center items-center text-center px-6 pt-32 pb-24 overflow-hidden z-10">
+    class="relative min-h-screen flex flex-col justify-center items-center text-center px-6 pt-24 pb-8 overflow-hidden z-10">
 
     <!-- Hero Content -->
-    <div class="relative z-10 max-w-6xl mx-auto flex flex-col items-center">
+    <div class="relative z-10 max-w-7xl mx-auto flex flex-col items-center justify-center w-full">
 
       <!-- Top Pill Tag with Subtle Pulse -->
-      <div class="animate-fade-rise mb-6">
+      <div class="animate-fade-rise mb-6 sm:mb-8">
         <a href="#modules"
-          class="liquid-glass inline-flex items-center gap-2.5 px-5 py-2 rounded-full text-xs sm:text-sm tracking-wide text-muted-foreground hover:text-white transition-all cursor-pointer">
+          class="liquid-glass inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full text-xs sm:text-sm tracking-wide text-muted-foreground hover:text-white transition-all cursor-pointer whitespace-nowrap">
           <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
           <span>SRINIVAS INSTITUTE OF TECHNOLOGY • MACHINE LEARNING COLLECTIVE</span>
-          <i data-lucide="chevron-down" class="w-3.5 h-3.5 opacity-60"></i>
         </a>
       </div>
 
-      <!-- Cinematic H1 -->
+      <!-- Cinematic H1 (Fluid Single-Line Cinematic Scale) -->
       <h1
-        class="animate-fade-rise text-4xl sm:text-7xl md:text-8xl leading-[0.95] tracking-[-2.46px] max-w-6xl font-normal font-serif-heading text-foreground">
+        class="animate-fade-rise text-3xl sm:text-[clamp(2.35rem,4.9vw,5.85rem)] leading-none tracking-[-0.03em] w-full max-w-none font-normal font-serif-heading text-foreground mx-auto whitespace-normal sm:whitespace-nowrap">
         Where <em class="not-italic text-muted-foreground hover:text-white transition-colors">dreams</em> rise <em
           class="not-italic text-muted-foreground hover:text-white transition-colors">through the silence.</em>
       </h1>
 
       <!-- Subtext with typewriter cycling effect -->
       <p id="heroSubtext"
-        class="animate-fade-rise-delay text-muted-foreground text-base sm:text-lg max-w-2xl mt-8 leading-relaxed font-normal">
+        class="animate-fade-rise-delay text-muted-foreground text-lg sm:text-xl md:text-2xl max-w-3xl mt-8 sm:mt-10 leading-relaxed font-normal">
         We're designing tools for deep thinkers, bold creators, and quiet rebels. Amid the chaos, we build digital
         spaces for sharp focus and inspired work at Srinivas Institute of Technology.
       </p>
 
-      <!-- Hero Quick Navigation Buttons -->
-      <div class="animate-fade-rise-delay-2 mt-10 flex flex-wrap items-center justify-center gap-3.5">
-        <a href="#modules"
-          class="liquid-glass rounded-full px-7 py-3.5 sm:py-4 text-sm sm:text-base text-cyan-300 hover:text-white hover:scale-105 cursor-pointer font-medium transition-all flex items-center gap-2 border border-cyan-400/30">
-          <i data-lucide="cpu" class="w-4 h-4 text-cyan-400"></i>
-          <span>Modules & Hardware</span>
-        </a>
-
-        <a href="#projects"
-          class="liquid-glass rounded-full px-7 py-3.5 sm:py-4 text-sm sm:text-base text-white hover:scale-105 cursor-pointer font-medium transition-all flex items-center gap-2">
-          <i data-lucide="globe" class="w-4 h-4 text-purple-400"></i>
-          <span>Online Projects</span>
-        </a>
-
-
-
-        <button onclick="openRegistrationModal()"
-          class="liquid-glass rounded-full px-7 py-3.5 sm:py-4 text-sm sm:text-base text-white hover:scale-105 active:scale-95 cursor-pointer font-medium transition-all flex items-center gap-2.5 border-2 border-cyan-400/70 bg-gradient-to-r from-cyan-500/25 via-blue-600/30 to-purple-600/25 shadow-[0_0_25px_rgba(6,182,212,0.35)] hover:shadow-[0_0_40px_rgba(6,182,212,0.6)]">
-          <i data-lucide="sparkles" class="w-4 h-4 text-cyan-300"></i>
-          <span>Begin Journey • Register</span>
-          <i data-lucide="arrow-right" class="w-4 h-4 text-cyan-300"></i>
-        </button>
-      </div>
-
       <!-- Feature Pill Trackers -->
       <div
-        class="animate-fade-rise-delay-2 mt-16 flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-xs text-muted-foreground/85">
+        class="animate-fade-rise-delay-2 mt-12 sm:mt-14 flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-xs sm:text-sm text-muted-foreground/85">
         <div class="flex items-center gap-2 hover:text-white transition-colors cursor-default">
           <i data-lucide="cpu" class="w-4 h-4 text-cyan-400"></i>
           <span>Deep Learning Architectures</span>
@@ -1517,12 +1541,6 @@
         </div>
       </div>
 
-      <!-- Scroll Indicator Down Arrow to Modules Showcase -->
-      <a href="#modules"
-        class="mt-14 inline-block text-muted-foreground/60 hover:text-white transition-colors animate-bounce"
-        title="Scroll to Modules & Showcase">
-        <i data-lucide="arrow-down" class="w-5 h-5"></i>
-      </a>
     </div>
   </section>
 
@@ -1554,7 +1572,7 @@
   <!-- ========================================================================= -->
   <!-- MODULES & HARDWARE (WITH MULTI-PHOTO GALLERY & ACCESS GATE)               -->
   <!-- ========================================================================= -->
-  <section id="modules" class="relative z-10 py-28 px-6 max-w-7xl mx-auto border-t border-white/5">
+  <section id="modules" class="relative z-10 pt-6 pb-20 px-6 max-w-7xl mx-auto">
     <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 scroll-reveal">
       <div>
         <span class="text-xs font-mono text-cyan-400 tracking-widest uppercase">Physical & Neural Systems</span>
@@ -1700,8 +1718,8 @@
   <!-- ========================================================================= -->
   <!-- PAGE 4: ONLINE PROJECTS & REPOSITORIES (WITH ONLINE PROJECT LINKS)        -->
   <!-- ========================================================================= -->
-  <section id="projects" class="relative z-10 py-28 px-6 max-w-7xl mx-auto border-t border-white/5">
-    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 scroll-reveal">
+  <section id="projects" class="relative z-10 pt-6 pb-16 px-6 max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 scroll-reveal">
       <div>
         <span class="text-xs font-mono text-cyan-400 tracking-widest uppercase">Deployed Work & Repositories</span>
         <h2 class="text-4xl sm:text-6xl font-serif-heading font-normal text-white mt-3">
@@ -1713,35 +1731,6 @@
         </p>
       </div>
 
-    </div>
-
-    <!-- Category Filter Tabs with Animated Active Pill -->
-    <div class="flex flex-wrap gap-2 mb-10 scroll-reveal">
-      <button onclick="filterProjects('all')"
-        class="project-filter-btn liquid-glass px-4 py-2 rounded-full text-xs font-medium text-white border border-cyan-400/40"
-        data-category="all">
-        All Projects
-      </button>
-      <button onclick="filterProjects('cv')"
-        class="project-filter-btn liquid-glass px-4 py-2 rounded-full text-xs font-medium text-muted-foreground hover:text-white"
-        data-category="cv">
-        Computer Vision
-      </button>
-      <button onclick="filterProjects('nlp')"
-        class="project-filter-btn liquid-glass px-4 py-2 rounded-full text-xs font-medium text-muted-foreground hover:text-white"
-        data-category="nlp">
-        NLP & LLMs
-      </button>
-      <button onclick="filterProjects('edge')"
-        class="project-filter-btn liquid-glass px-4 py-2 rounded-full text-xs font-medium text-muted-foreground hover:text-white"
-        data-category="edge">
-        Edge AI & IoT
-      </button>
-      <button onclick="filterProjects('kaggle')"
-        class="project-filter-btn liquid-glass px-4 py-2 rounded-full text-xs font-medium text-muted-foreground hover:text-white"
-        data-category="kaggle">
-        Competitive ML
-      </button>
     </div>
 
     <!-- Live Dynamic Project Cards Grid with 3D Tilt Animations -->
@@ -1911,7 +1900,7 @@
   <!-- ========================================================================= -->
   <!-- PAGE 4: CORE TEAM MEMBERS SHOWCASE                                        -->
   <!-- ========================================================================= -->
-  <section id="team" class="relative z-10 py-28 px-6 max-w-7xl mx-auto border-t border-white/5">
+  <section id="team" class="relative z-10 pt-6 pb-16 px-6 max-w-7xl mx-auto">
     <div class="text-center max-w-3xl mx-auto mb-16 scroll-reveal">
       <span class="text-xs font-mono text-cyan-400 tracking-widest uppercase">Leadership &amp; Research</span>
       <h2 class="text-4xl sm:text-6xl font-serif-heading font-normal text-white mt-3">
@@ -2292,312 +2281,448 @@
     <!-- 3 Faculty Cards Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
 
-      <!-- Faculty 1: PROF. DAYA NAIK (HOD) -->
+      <!-- Institutional Patron & Principal: DR. SHRINIVASA MAYYA D (Featured First & Highest Priority) -->
       <div
-        class="tilt-card liquid-glass rounded-3xl p-8 flex flex-col sm:flex-row gap-6 items-center sm:items-start scroll-reveal group border border-white/10 hover:border-cyan-400/40 transition-all">
+        class="col-span-1 md:col-span-2 lg:col-span-3 tilt-card liquid-glass rounded-3xl p-7 sm:p-10 flex flex-col md:flex-row gap-7 sm:gap-9 items-center md:items-stretch scroll-reveal group border border-amber-400/35 hover:border-amber-400/70 bg-gradient-to-r from-amber-500/[0.05] via-slate-900/60 to-cyan-500/[0.04] transition-all shadow-2xl relative overflow-hidden mb-2"
+        style="transition-delay: 0.05s">
+        <!-- Subtle Ambient Glow Behind Card -->
+        <div class="absolute -top-24 -right-24 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
         <!-- Photo Space / Container -->
         <div
-          class="relative w-36 h-48 rounded-2xl overflow-hidden bg-slate-900 border border-cyan-400/40 shrink-0 shadow-xl group-hover:scale-105 transition-transform flex items-center justify-center">
-          <img id="photo_daya_naik" src="images/prof_daya_naik.jpg" alt="Prof. Daya Naik"
-            class="w-full h-full object-cover"
-            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          class="relative w-44 sm:w-56 h-60 sm:h-72 rounded-2xl overflow-hidden bg-slate-900 border-2 border-amber-400/50 shrink-0 shadow-2xl group-hover:scale-[1.02] transition-transform flex items-center justify-center self-center md:self-auto">
+          <img id="photo_principal" src="images/principal_srinivasa_mayya.jpg" alt="Dr. Shrinivasa Mayya D - Principal"
+            class="w-full h-full object-cover object-top"
+            onerror="if(!this.dataset.retried){this.dataset.retried='1';this.src='file:///C:/Users/HP/.gemini/antigravity-ide/brain/52e51adf-fcd9-4d67-b5a9-2d78a9366505/.user_uploaded/media_1790705790687.jpg';}else{this.style.display='none';if(this.nextElementSibling)this.nextElementSibling.style.display='flex';}">
           <div style="display:none;" class="w-full h-full flex flex-col items-center justify-center text-center p-2">
             <div
-              class="w-16 h-16 rounded-full bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 font-serif-heading text-2xl font-bold mb-2">
-              DN</div>
-            <span class="text-[9px] text-muted-foreground/60">Prof. Daya Naik</span>
+              class="w-20 h-20 rounded-full bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 font-serif-heading text-3xl font-bold mb-2">
+              SM</div>
+            <span class="text-[10px] text-muted-foreground/70">Dr. Shrinivasa Mayya D</span>
           </div>
         </div>
 
-        <div class="flex-1 text-center sm:text-left">
-          <div class="flex flex-wrap items-center justify-center sm:justify-between gap-2 mb-3">
-            <span
-              class="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-300 font-mono text-xs border border-cyan-400/20">
-              Head of Department (HOD)
-            </span>
-            <span class="text-[11px] font-mono text-muted-foreground/70">AIML Dept</span>
+        <div class="flex-1 text-center md:text-left flex flex-col justify-between">
+          <div>
+            <div class="flex flex-wrap items-center justify-center md:justify-between gap-2.5 mb-2.5">
+              <span
+                class="px-3.5 py-1 rounded-full bg-amber-500/15 text-amber-300 font-mono text-xs border border-amber-400/35 flex items-center gap-1.5 shadow-sm">
+                <i data-lucide="crown" class="w-3.5 h-3.5 text-amber-400"></i> Patron &amp; Institutional Leadership
+              </span>
+              <span class="text-xs font-mono text-amber-400/90 px-3 py-0.5 rounded-full bg-amber-400/5 border border-amber-400/20">Principal • SIT</span>
+            </div>
+
+            <h3 class="text-2xl sm:text-4xl font-serif-heading font-normal text-white group-hover:text-amber-200 transition-colors leading-tight">
+              Dr. Shrinivasa Mayya D
+            </h3>
+            <p class="text-xs sm:text-sm font-mono text-amber-400/90 mt-1">
+              Principal • Srinivas Institute of Technology, Mangaluru
+            </p>
+
+            <p
+              class="text-xs sm:text-base text-slate-200 mt-4 leading-relaxed italic border-l-2 border-amber-400/50 pl-4 bg-amber-500/[0.04] py-3 rounded-r-2xl">
+              "With profound respect and heartfelt gratitude to our respected Principal for his visionary guidance,
+              patronage, and steadfast encouragement that empowered the establishment of the Machine Learning Club.
+              His leadership continuously inspires our students to pioneer breakthrough innovations in Artificial Intelligence."
+            </p>
           </div>
 
-          <h3 class="text-2xl font-serif-heading font-normal text-white group-hover:text-cyan-300 transition-colors">
-            Prof. Daya Naik
-          </h3>
-          <p class="text-xs font-mono text-cyan-400/80 mt-0.5">Head of Department • Department of Artificial
-            Intelligence &amp; Machine Learning</p>
+          <div
+            class="pt-4 mt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-muted-foreground/70">
+            <span class="flex items-center gap-1.5 text-slate-300">
+              <i data-lucide="school" class="w-4 h-4 text-amber-400"></i> Srinivas Institute of Technology, Valachil
+            </span>
+            <span class="text-amber-300 flex items-center gap-1.5 font-medium">
+              <i data-lucide="award" class="w-4 h-4 text-amber-400"></i> Chief Patron &amp; Institutional Head
+            </span>
+          </div>
+        </div>
+      </div>
 
+      <!-- Faculty 1: PROF. DAYA NAIK (HOD) -->
+      <div
+        class="tilt-card liquid-glass rounded-3xl p-6 sm:p-7 flex flex-col justify-between scroll-reveal group border border-white/10 hover:border-cyan-400/40 transition-all bg-slate-900/40 hover:bg-slate-900/60 shadow-xl">
+        <div>
+          <!-- Top Row: Photo + Name/Role Header (Tightly aligned, zero wasted space) -->
+          <div class="flex items-center gap-4 sm:gap-5 mb-3.5">
+            <div
+              class="relative w-24 h-32 sm:w-28 sm:h-36 rounded-2xl overflow-hidden bg-slate-900 border border-cyan-400/40 shrink-0 shadow-xl group-hover:scale-105 transition-transform flex items-center justify-center">
+              <img id="photo_daya_naik" src="images/prof_daya_naik.jpg" alt="Prof. Daya Naik"
+                class="w-full h-full object-cover object-top"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div style="display:none;" class="w-full h-full flex flex-col items-center justify-center text-center p-2">
+                <div
+                  class="w-14 h-14 rounded-full bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 font-serif-heading text-xl font-bold mb-1">
+                  DN</div>
+                <span class="text-[9px] text-muted-foreground/60">Prof. Daya Naik</span>
+              </div>
+            </div>
+
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-wrap items-center gap-1.5 mb-2">
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 font-mono text-[11px] border border-cyan-400/25">
+                  Head of Department (HOD)
+                </span>
+                <span class="text-[10px] font-mono text-muted-foreground/70">AIML Dept</span>
+              </div>
+
+              <h3 class="text-xl sm:text-2xl font-serif-heading font-normal text-white group-hover:text-cyan-300 transition-colors leading-tight">
+                Prof. Daya Naik
+              </h3>
+              <p class="text-xs font-mono text-cyan-400/80 mt-1 leading-snug">
+                Head of Department • AIML
+              </p>
+            </div>
+          </div>
+
+          <!-- Full-Width Quote (Spans Entire Card Width - Zero Blank Void) -->
           <p
-            class="text-xs sm:text-sm text-muted-foreground mt-4 leading-relaxed italic border-l-2 border-cyan-400/40 pl-3 bg-cyan-500/[0.02] py-2 rounded-r-xl">
+            class="w-full text-xs sm:text-[13px] text-slate-300 leading-relaxed italic border-l-2 border-cyan-400/40 pl-3.5 bg-cyan-500/[0.04] py-3 rounded-r-xl my-2">
             "Heartfelt thanks to our respected HOD for giving us the platform, vision, and approval to start the ML Club
             at SIT. Your continuous encouragement fuels our mission to build cutting-edge AI innovations."
           </p>
+        </div>
 
-          <div
-            class="pt-4 mt-4 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-muted-foreground/70">
-            <span>Srinivas Institute of Technology</span>
-            <span class="text-cyan-400 flex items-center gap-1">
-              <i data-lucide="award" class="w-3.5 h-3.5"></i> Department Leadership
-            </span>
-          </div>
+        <!-- Full-Width Footer -->
+        <div
+          class="pt-3.5 mt-3 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-muted-foreground/70">
+          <span>Srinivas Institute of Technology</span>
+          <span class="text-cyan-400 flex items-center gap-1">
+            <i data-lucide="award" class="w-3.5 h-3.5"></i> Department Leadership
+          </span>
         </div>
       </div>
 
       <!-- Faculty 2: PROF. SONALI (Academic Advisor) -->
       <div
-        class="tilt-card liquid-glass rounded-3xl p-8 flex flex-col sm:flex-row gap-6 items-center sm:items-start scroll-reveal group border border-white/10 hover:border-purple-400/40 transition-all"
+        class="tilt-card liquid-glass rounded-3xl p-6 sm:p-7 flex flex-col justify-between scroll-reveal group border border-white/10 hover:border-purple-400/40 transition-all bg-slate-900/40 hover:bg-slate-900/60 shadow-xl"
         style="transition-delay: 0.15s">
-        <!-- Photo Space / Container -->
-        <div
-          class="relative w-36 h-48 rounded-2xl overflow-hidden bg-slate-900 border border-purple-400/40 shrink-0 shadow-xl group-hover:scale-105 transition-transform flex items-center justify-center">
-          <img id="photo_sonali" src="images/prof_sonali.jpg" alt="Prof. Sonali" class="w-full h-full object-cover"
-            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div style="display:none;" class="w-full h-full flex flex-col items-center justify-center text-center p-2">
+        <div>
+          <!-- Top Row: Photo + Name/Role Header -->
+          <div class="flex items-center gap-4 sm:gap-5 mb-3.5">
             <div
-              class="w-16 h-16 rounded-full bg-purple-500/20 border border-purple-400/40 flex items-center justify-center text-purple-300 font-serif-heading text-2xl font-bold mb-2">
-              PS</div>
-            <span class="text-[9px] text-muted-foreground/60">Prof. Sonali</span>
+              class="relative w-24 h-32 sm:w-28 sm:h-36 rounded-2xl overflow-hidden bg-slate-900 border border-purple-400/40 shrink-0 shadow-xl group-hover:scale-105 transition-transform flex items-center justify-center">
+              <img id="photo_sonali" src="images/prof_sonali.jpg" alt="Prof. Sonali"
+                class="w-full h-full object-cover object-top"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div style="display:none;" class="w-full h-full flex flex-col items-center justify-center text-center p-2">
+                <div
+                  class="w-14 h-14 rounded-full bg-purple-500/20 border border-purple-400/40 flex items-center justify-center text-purple-300 font-serif-heading text-xl font-bold mb-1">
+                  PS</div>
+                <span class="text-[9px] text-muted-foreground/60">Prof. Sonali</span>
+              </div>
+            </div>
+
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-wrap items-center gap-1.5 mb-2">
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-purple-500/10 text-purple-300 font-mono text-[11px] border border-purple-400/25">
+                  Academic Advisor
+                </span>
+                <span class="text-[10px] font-mono text-muted-foreground/70">Faculty Mentor</span>
+              </div>
+
+              <h3 class="text-xl sm:text-2xl font-serif-heading font-normal text-white group-hover:text-purple-300 transition-colors leading-tight">
+                Prof. Sonali
+              </h3>
+              <p class="text-xs font-mono text-purple-400/80 mt-1 leading-snug">
+                Academic Advisor • SIT
+              </p>
+            </div>
           </div>
-        </div>
 
-        <div class="flex-1 text-center sm:text-left">
-          <div class="flex flex-wrap items-center justify-center sm:justify-between gap-2 mb-3">
-            <span
-              class="px-3 py-1 rounded-full bg-purple-500/10 text-purple-300 font-mono text-xs border border-purple-400/20">
-              Academic Advisor
-            </span>
-            <span class="text-[11px] font-mono text-muted-foreground/70">Faculty Mentor</span>
-          </div>
-
-          <h3 class="text-2xl font-serif-heading font-normal text-white group-hover:text-purple-300 transition-colors">
-            Prof. Sonali
-          </h3>
-          <p class="text-xs font-mono text-purple-400/80 mt-0.5">Academic Advisor • Srinivas Institute of Technology</p>
-
+          <!-- Full-Width Quote -->
           <p
-            class="text-xs sm:text-sm text-muted-foreground mt-4 leading-relaxed italic border-l-2 border-purple-400/40 pl-3 bg-purple-500/[0.02] py-2 rounded-r-xl">
+            class="w-full text-xs sm:text-[13px] text-slate-300 leading-relaxed italic border-l-2 border-purple-400/40 pl-3.5 bg-purple-500/[0.04] py-3 rounded-r-xl my-2">
             "Sincere gratitude to our Academic Advisor for endless support, guidance, and belief in our ideas. Your
             active mentorship made opening this student collective possible."
           </p>
+        </div>
 
-          <div
-            class="pt-4 mt-4 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-muted-foreground/70">
-            <span>Srinivas Institute of Technology</span>
-            <span class="text-purple-400 flex items-center gap-1">
-              <i data-lucide="heart-handshake" class="w-3.5 h-3.5"></i> Faculty Mentorship
-            </span>
-          </div>
+        <!-- Full-Width Footer -->
+        <div
+          class="pt-3.5 mt-3 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-muted-foreground/70">
+          <span>Srinivas Institute of Technology</span>
+          <span class="text-purple-400 flex items-center gap-1">
+            <i data-lucide="heart-handshake" class="w-3.5 h-3.5"></i> Faculty Mentorship
+          </span>
         </div>
       </div>
 
       <!-- Faculty 3: PROF. PARVATHRAJ (Association Head) -->
       <div
-        class="tilt-card liquid-glass rounded-3xl p-8 flex flex-col sm:flex-row gap-6 items-center sm:items-start scroll-reveal group border border-white/10 hover:border-emerald-400/40 transition-all"
+        class="tilt-card liquid-glass rounded-3xl p-6 sm:p-7 flex flex-col justify-between scroll-reveal group border border-white/10 hover:border-emerald-400/40 transition-all bg-slate-900/40 hover:bg-slate-900/60 shadow-xl"
         style="transition-delay: 0.3s">
-        <!-- Photo Space / Container -->
-        <div
-          class="relative w-36 h-48 rounded-2xl overflow-hidden bg-slate-900 border border-emerald-400/40 shrink-0 shadow-xl group-hover:scale-105 transition-transform flex items-center justify-center">
-          <img id="photo_parvathraj" src="images/prof_parvathraj.jpg" alt="Prof. Parvathraj"
-            class="w-full h-full object-cover"
-            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div style="display:none;" class="w-full h-full flex flex-col items-center justify-center text-center p-2">
+        <div>
+          <!-- Top Row: Photo + Name/Role Header -->
+          <div class="flex items-center gap-4 sm:gap-5 mb-3.5">
             <div
-              class="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300 font-serif-heading text-2xl font-bold mb-2">
-              PP</div>
-            <span class="text-[9px] text-muted-foreground/60">Prof. Parvathraj</span>
+              class="relative w-24 h-32 sm:w-28 sm:h-36 rounded-2xl overflow-hidden bg-slate-900 border border-emerald-400/40 shrink-0 shadow-xl group-hover:scale-105 transition-transform flex items-center justify-center">
+              <img id="photo_parvathraj" src="images/prof_parvathraj.jpg" alt="Prof. Parvathraj"
+                class="w-full h-full object-cover object-top"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div style="display:none;" class="w-full h-full flex flex-col items-center justify-center text-center p-2">
+                <div
+                  class="w-14 h-14 rounded-full bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300 font-serif-heading text-xl font-bold mb-1">
+                  PP</div>
+                <span class="text-[9px] text-muted-foreground/60">Prof. Parvathraj</span>
+              </div>
+            </div>
+
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-wrap items-center gap-1.5 mb-2">
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 font-mono text-[11px] border border-emerald-400/25">
+                  Association Head
+                </span>
+                <span class="text-[10px] font-mono text-muted-foreground/70">Association Head</span>
+              </div>
+
+              <h3 class="text-xl sm:text-2xl font-serif-heading font-normal text-white group-hover:text-emerald-300 transition-colors leading-tight">
+                Prof. Parvathraj
+              </h3>
+              <p class="text-xs font-mono text-emerald-400/80 mt-1 leading-snug">
+                Association Head • SIT
+              </p>
+            </div>
           </div>
-        </div>
 
-        <div class="flex-1 text-center sm:text-left">
-          <div class="flex flex-wrap items-center justify-center sm:justify-between gap-2 mb-3">
-            <span
-              class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-300 font-mono text-xs border border-emerald-400/20">
-              Association Head
-            </span>
-            <span class="text-[11px] font-mono text-muted-foreground/70">Association Head</span>
-          </div>
-
-          <h3 class="text-2xl font-serif-heading font-normal text-white group-hover:text-emerald-300 transition-colors">
-            Prof. Parvathraj
-          </h3>
-          <p class="text-xs font-mono text-emerald-400/80 mt-0.5">Association Head • Srinivas Institute of Technology
-          </p>
-
+          <!-- Full-Width Quote -->
           <p
-            class="text-xs sm:text-sm text-muted-foreground mt-4 leading-relaxed italic border-l-2 border-emerald-400/40 pl-3 bg-emerald-500/[0.02] py-2 rounded-r-xl">
+            class="w-full text-xs sm:text-[13px] text-slate-300 leading-relaxed italic border-l-2 border-emerald-400/40 pl-3.5 bg-emerald-500/[0.04] py-3 rounded-r-xl my-2">
             "Heartfelt gratitude to Prof. Parvathraj for operational leadership, constant encouragement, and dedicated
             guidance as Association Head for the ML Club collective."
           </p>
+        </div>
 
-          <div
-            class="pt-4 mt-4 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-muted-foreground/70">
-            <span>Srinivas Institute of Technology</span>
-            <span class="text-emerald-400 flex items-center gap-1">
-              <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Association Head
-            </span>
-          </div>
+        <!-- Full-Width Footer -->
+        <div
+          class="pt-3.5 mt-3 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-muted-foreground/70">
+          <span>Srinivas Institute of Technology</span>
+          <span class="text-emerald-400 flex items-center gap-1">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Association Head
+          </span>
         </div>
       </div>
 
-
-      <!-- Faculty 4: Prof. Nivin (1st) -->
+      <!-- Faculty 4: Prof. Nivin -->
       <div
-        class="tilt-card liquid-glass rounded-3xl p-8 flex flex-col sm:flex-row gap-6 items-center sm:items-start scroll-reveal group border border-white/10 hover:border-orange-400/40 transition-all"
+        class="tilt-card liquid-glass rounded-3xl p-6 sm:p-7 flex flex-col justify-between scroll-reveal group border border-white/10 hover:border-orange-400/40 transition-all bg-slate-900/40 hover:bg-slate-900/60 shadow-xl"
         style="transition-delay: 0.45s">
-        <div
-          class="relative w-36 h-48 rounded-2xl overflow-hidden bg-slate-900 border border-orange-400/40 shrink-0 shadow-xl group-hover:scale-105 transition-transform flex items-center justify-center">
-          <img id="photo_nivin" src="images/prof_nivin.jpg" alt="Prof. Nivin" class="w-full h-full object-cover"
-            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div style="display:none;" class="w-full h-full flex flex-col items-center justify-center text-center p-2">
+        <div>
+          <!-- Top Row: Photo + Name/Role Header -->
+          <div class="flex items-center gap-4 sm:gap-5 mb-3.5">
             <div
-              class="w-16 h-16 rounded-full bg-orange-500/20 border border-orange-400/40 flex items-center justify-center text-orange-300 font-serif-heading text-2xl font-bold mb-2">
-              NV</div>
-            <span class="text-[9px] text-muted-foreground/60">Prof. Nivin</span>
+              class="relative w-24 h-32 sm:w-28 sm:h-36 rounded-2xl overflow-hidden bg-slate-900 border border-orange-400/40 shrink-0 shadow-xl group-hover:scale-105 transition-transform flex items-center justify-center">
+              <img id="photo_nivin" src="images/prof_nivin.jpg" alt="Prof. Nivin"
+                class="w-full h-full object-cover object-top"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div style="display:none;" class="w-full h-full flex flex-col items-center justify-center text-center p-2">
+                <div
+                  class="w-14 h-14 rounded-full bg-orange-500/20 border border-orange-400/40 flex items-center justify-center text-orange-300 font-serif-heading text-xl font-bold mb-1">
+                  NV</div>
+                <span class="text-[9px] text-muted-foreground/60">Prof. Nivin</span>
+              </div>
+            </div>
+
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-wrap items-center gap-1.5 mb-2">
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-orange-500/10 text-orange-300 font-mono text-[11px] border border-orange-400/25">
+                  Faculty Mentor
+                </span>
+                <span class="text-[10px] font-mono text-muted-foreground/70">AIML Dept</span>
+              </div>
+
+              <h3 class="text-xl sm:text-2xl font-serif-heading font-normal text-white group-hover:text-orange-300 transition-colors leading-tight">
+                Prof. Nivin
+              </h3>
+              <p class="text-xs font-mono text-orange-400/80 mt-1 leading-snug">
+                Faculty Mentor • SIT
+              </p>
+            </div>
           </div>
-        </div>
-        <div class="flex-1 text-center sm:text-left">
-          <div class="flex flex-wrap items-center justify-center sm:justify-between gap-2 mb-3">
-            <span
-              class="px-3 py-1 rounded-full bg-orange-500/10 text-orange-300 font-mono text-xs border border-orange-400/20">
-              Faculty Mentor
-            </span>
-            <span class="text-[11px] font-mono text-muted-foreground/70">AIML Dept</span>
-          </div>
-          <h3 class="text-2xl font-serif-heading font-normal text-white group-hover:text-orange-300 transition-colors">
-            Prof. Nivin
-          </h3>
-          <p class="text-xs font-mono text-orange-400/80 mt-0.5">Faculty Mentor • Srinivas Institute of Technology</p>
+
+          <!-- Full-Width Quote -->
           <p
-            class="text-xs sm:text-sm text-muted-foreground mt-4 leading-relaxed italic border-l-2 border-orange-400/40 pl-3 bg-orange-500/[0.02] py-2 rounded-r-xl">
-            "Grateful for the guidance and unwavering support extended to the ML Club and its student community."
+            class="w-full text-xs sm:text-[13px] text-slate-300 leading-relaxed italic border-l-2 border-orange-400/40 pl-3.5 bg-orange-500/[0.04] py-3 rounded-r-xl my-2">
+            "Heartfelt gratitude to Prof. Nivin for his technical mentorship, valuable project guidance, and continuous enthusiasm for empowering students in artificial intelligence."
           </p>
-          <div
-            class="pt-4 mt-4 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-muted-foreground/70">
-            <span>Srinivas Institute of Technology</span>
-            <span class="text-orange-400 flex items-center gap-1">
-              <i data-lucide="star" class="w-3.5 h-3.5"></i> Faculty Mentor
-            </span>
-          </div>
+        </div>
+
+        <!-- Full-Width Footer -->
+        <div
+          class="pt-3.5 mt-3 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-muted-foreground/70">
+          <span>Srinivas Institute of Technology</span>
+          <span class="text-orange-400 flex items-center gap-1">
+            <i data-lucide="star" class="w-3.5 h-3.5"></i> Faculty Mentor
+          </span>
         </div>
       </div>
 
-      <!-- Faculty 5: Prof. Madhusudhan (2nd) -->
+      <!-- Faculty 5: Prof. Madhusudhan -->
       <div
-        class="tilt-card liquid-glass rounded-3xl p-8 flex flex-col sm:flex-row gap-6 items-center sm:items-start scroll-reveal group border border-white/10 hover:border-pink-400/40 transition-all"
+        class="tilt-card liquid-glass rounded-3xl p-6 sm:p-7 flex flex-col justify-between scroll-reveal group border border-white/10 hover:border-pink-400/40 transition-all bg-slate-900/40 hover:bg-slate-900/60 shadow-xl"
         style="transition-delay: 0.6s">
-        <div
-          class="relative w-36 h-48 rounded-2xl overflow-hidden bg-slate-900 border border-pink-400/40 shrink-0 shadow-xl group-hover:scale-105 transition-transform flex items-center justify-center">
-          <img id="photo_madhusudan" src="images/prof_madhusudan.jpg" alt="Prof. Madhusudhan"
-            class="w-full h-full object-cover"
-            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div style="display:none;" class="w-full h-full flex flex-col items-center justify-center text-center p-2">
+        <div>
+          <!-- Top Row: Photo + Name/Role Header -->
+          <div class="flex items-center gap-4 sm:gap-5 mb-3.5">
             <div
-              class="w-16 h-16 rounded-full bg-pink-500/20 border border-pink-400/40 flex items-center justify-center text-pink-300 font-serif-heading text-2xl font-bold mb-2">
-              MS</div>
-            <span class="text-[9px] text-muted-foreground/60">Prof. Madhusudhan</span>
+              class="relative w-24 h-32 sm:w-28 sm:h-36 rounded-2xl overflow-hidden bg-slate-900 border border-pink-400/40 shrink-0 shadow-xl group-hover:scale-105 transition-transform flex items-center justify-center">
+              <img id="photo_madhusudan" src="images/prof_madhusudan.jpg" alt="Prof. Madhusudhan"
+                class="w-full h-full object-cover object-top"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div style="display:none;" class="w-full h-full flex flex-col items-center justify-center text-center p-2">
+                <div
+                  class="w-14 h-14 rounded-full bg-pink-500/20 border border-pink-400/40 flex items-center justify-center text-pink-300 font-serif-heading text-xl font-bold mb-1">
+                  MS</div>
+                <span class="text-[9px] text-muted-foreground/60">Prof. Madhusudhan</span>
+              </div>
+            </div>
+
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-wrap items-center gap-1.5 mb-2">
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-pink-500/10 text-pink-300 font-mono text-[11px] border border-pink-400/25">
+                  Faculty Mentor
+                </span>
+                <span class="text-[10px] font-mono text-muted-foreground/70">AIML Dept</span>
+              </div>
+
+              <h3 class="text-xl sm:text-2xl font-serif-heading font-normal text-white group-hover:text-pink-300 transition-colors leading-tight">
+                Prof. Madhusudhan
+              </h3>
+              <p class="text-xs font-mono text-pink-400/80 mt-1 leading-snug">
+                Faculty Mentor • SIT
+              </p>
+            </div>
           </div>
-        </div>
-        <div class="flex-1 text-center sm:text-left">
-          <div class="flex flex-wrap items-center justify-center sm:justify-between gap-2 mb-3">
-            <span
-              class="px-3 py-1 rounded-full bg-pink-500/10 text-pink-300 font-mono text-xs border border-pink-400/20">
-              Faculty Mentor
-            </span>
-            <span class="text-[11px] font-mono text-muted-foreground/70">AIML Dept</span>
-          </div>
-          <h3 class="text-2xl font-serif-heading font-normal text-white group-hover:text-pink-300 transition-colors">
-            Prof. Madhusudhan
-          </h3>
-          <p class="text-xs font-mono text-pink-400/80 mt-0.5">Faculty Mentor • Srinivas Institute of Technology</p>
+
+          <!-- Full-Width Quote -->
           <p
-            class="text-xs sm:text-sm text-muted-foreground mt-4 leading-relaxed italic border-l-2 border-pink-400/40 pl-3 bg-pink-500/[0.02] py-2 rounded-r-xl">
-            "Grateful for the guidance and unwavering support extended to the ML Club and its student community."
+            class="w-full text-xs sm:text-[13px] text-slate-300 leading-relaxed italic border-l-2 border-pink-400/40 pl-3.5 bg-pink-500/[0.04] py-3 rounded-r-xl my-2">
+            "Deep gratitude to Prof. Madhusudhan for his insightful academic guidance, practical problem-solving mentorship, and dedicated backing of our student collective."
           </p>
-          <div
-            class="pt-4 mt-4 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-muted-foreground/70">
-            <span>Srinivas Institute of Technology</span>
-            <span class="text-pink-400 flex items-center gap-1">
-              <i data-lucide="star" class="w-3.5 h-3.5"></i> Faculty Mentor
-            </span>
-          </div>
+        </div>
+
+        <!-- Full-Width Footer -->
+        <div
+          class="pt-3.5 mt-3 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-muted-foreground/70">
+          <span>Srinivas Institute of Technology</span>
+          <span class="text-pink-400 flex items-center gap-1">
+            <i data-lucide="star" class="w-3.5 h-3.5"></i> Faculty Mentor
+          </span>
         </div>
       </div>
 
-      <!-- Faculty 6: Prof. Ganesh (3rd) -->
+      <!-- Faculty 6: Prof. Ganesh -->
       <div
-        class="tilt-card liquid-glass rounded-3xl p-8 flex flex-col sm:flex-row gap-6 items-center sm:items-start scroll-reveal group border border-white/10 hover:border-yellow-400/40 transition-all"
+        class="tilt-card liquid-glass rounded-3xl p-6 sm:p-7 flex flex-col justify-between scroll-reveal group border border-white/10 hover:border-yellow-400/40 transition-all bg-slate-900/40 hover:bg-slate-900/60 shadow-xl"
         style="transition-delay: 0.75s">
-        <div
-          class="relative w-36 h-48 rounded-2xl overflow-hidden bg-slate-900 border border-yellow-400/40 shrink-0 shadow-xl group-hover:scale-105 transition-transform flex items-center justify-center">
-          <img id="photo_ganesh" src="images/prof_ganesh.jpg" alt="Prof. Ganesh" class="w-full h-full object-cover"
-            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div style="display:none;" class="w-full h-full flex flex-col items-center justify-center text-center p-2">
+        <div>
+          <!-- Top Row: Photo + Name/Role Header -->
+          <div class="flex items-center gap-4 sm:gap-5 mb-3.5">
             <div
-              class="w-16 h-16 rounded-full bg-yellow-500/20 border border-yellow-400/40 flex items-center justify-center text-yellow-300 font-serif-heading text-2xl font-bold mb-2">
-              GN</div>
-            <span class="text-[9px] text-muted-foreground/60">Prof. Ganesh</span>
+              class="relative w-24 h-32 sm:w-28 sm:h-36 rounded-2xl overflow-hidden bg-slate-900 border border-yellow-400/40 shrink-0 shadow-xl group-hover:scale-105 transition-transform flex items-center justify-center">
+              <img id="photo_ganesh" src="images/prof_ganesh.jpg" alt="Prof. Ganesh"
+                class="w-full h-full object-cover object-top"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div style="display:none;" class="w-full h-full flex flex-col items-center justify-center text-center p-2">
+                <div
+                  class="w-14 h-14 rounded-full bg-yellow-500/20 border border-yellow-400/40 flex items-center justify-center text-yellow-300 font-serif-heading text-xl font-bold mb-1">
+                  GN</div>
+                <span class="text-[9px] text-muted-foreground/60">Prof. Ganesh</span>
+              </div>
+            </div>
+
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-wrap items-center gap-1.5 mb-2">
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-yellow-500/10 text-yellow-300 font-mono text-[11px] border border-yellow-400/25">
+                  Faculty Mentor
+                </span>
+                <span class="text-[10px] font-mono text-muted-foreground/70">AIML Dept</span>
+              </div>
+
+              <h3 class="text-xl sm:text-2xl font-serif-heading font-normal text-white group-hover:text-yellow-300 transition-colors leading-tight">
+                Prof. Ganesh
+              </h3>
+              <p class="text-xs font-mono text-yellow-400/80 mt-1 leading-snug">
+                Faculty Mentor • SIT
+              </p>
+            </div>
           </div>
-        </div>
-        <div class="flex-1 text-center sm:text-left">
-          <div class="flex flex-wrap items-center justify-center sm:justify-between gap-2 mb-3">
-            <span
-              class="px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-300 font-mono text-xs border border-yellow-400/20">
-              Faculty Mentor
-            </span>
-            <span class="text-[11px] font-mono text-muted-foreground/70">AIML Dept</span>
-          </div>
-          <h3 class="text-2xl font-serif-heading font-normal text-white group-hover:text-yellow-300 transition-colors">
-            Prof. Ganesh
-          </h3>
-          <p class="text-xs font-mono text-yellow-400/80 mt-0.5">Faculty Mentor • Srinivas Institute of Technology</p>
+
+          <!-- Full-Width Quote -->
           <p
-            class="text-xs sm:text-sm text-muted-foreground mt-4 leading-relaxed italic border-l-2 border-yellow-400/40 pl-3 bg-yellow-500/[0.02] py-2 rounded-r-xl">
-            "Grateful for the guidance and unwavering support extended to the ML Club and its student community."
+            class="w-full text-xs sm:text-[13px] text-slate-300 leading-relaxed italic border-l-2 border-yellow-400/40 pl-3.5 bg-yellow-500/[0.04] py-3 rounded-r-xl my-2">
+            "Sincere appreciation to Prof. Ganesh for inspiring foundational learning, encouraging experimental research, and fostering an innovative technical ecosystem at SIT."
           </p>
-          <div
-            class="pt-4 mt-4 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-muted-foreground/70">
-            <span>Srinivas Institute of Technology</span>
-            <span class="text-yellow-400 flex items-center gap-1">
-              <i data-lucide="star" class="w-3.5 h-3.5"></i> Faculty Mentor
-            </span>
-          </div>
+        </div>
+
+        <!-- Full-Width Footer -->
+        <div
+          class="pt-3.5 mt-3 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-muted-foreground/70">
+          <span>Srinivas Institute of Technology</span>
+          <span class="text-yellow-400 flex items-center gap-1">
+            <i data-lucide="star" class="w-3.5 h-3.5"></i> Faculty Mentor
+          </span>
         </div>
       </div>
 
       <!-- Faculty 7: Prof. Nithya -->
       <div
-        class="tilt-card liquid-glass rounded-3xl p-8 flex flex-col sm:flex-row gap-6 items-center sm:items-start scroll-reveal group border border-white/10 hover:border-sky-400/40 transition-all"
+        class="tilt-card liquid-glass rounded-3xl p-6 sm:p-7 flex flex-col justify-between scroll-reveal group border border-white/10 hover:border-sky-400/40 transition-all bg-slate-900/40 hover:bg-slate-900/60 shadow-xl"
         style="transition-delay: 0.9s">
-        <div
-          class="relative w-36 h-48 rounded-2xl overflow-hidden bg-slate-900 border border-sky-400/40 shrink-0 shadow-xl group-hover:scale-105 transition-transform flex items-center justify-center">
-          <img id="photo_nithya" src="images/prof_nithya.jpg" alt="Prof. Nithya" class="w-full h-full object-cover"
-            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div style="display:none;" class="w-full h-full flex flex-col items-center justify-center text-center p-2">
+        <div>
+          <!-- Top Row: Photo + Name/Role Header -->
+          <div class="flex items-center gap-4 sm:gap-5 mb-3.5">
             <div
-              class="w-16 h-16 rounded-full bg-sky-500/20 border border-sky-400/40 flex items-center justify-center text-sky-300 font-serif-heading text-2xl font-bold mb-2">
-              NT</div>
-            <span class="text-[9px] text-muted-foreground/60">Prof. Nithya</span>
+              class="relative w-24 h-32 sm:w-28 sm:h-36 rounded-2xl overflow-hidden bg-slate-900 border border-sky-400/40 shrink-0 shadow-xl group-hover:scale-105 transition-transform flex items-center justify-center">
+              <img id="photo_nithya" src="images/prof_nithya.jpg" alt="Prof. Nithya"
+                class="w-full h-full object-cover object-top"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div style="display:none;" class="w-full h-full flex flex-col items-center justify-center text-center p-2">
+                <div
+                  class="w-14 h-14 rounded-full bg-sky-500/20 border border-sky-400/40 flex items-center justify-center text-sky-300 font-serif-heading text-xl font-bold mb-1">
+                  NT</div>
+                <span class="text-[9px] text-muted-foreground/60">Prof. Nithya</span>
+              </div>
+            </div>
+
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-wrap items-center gap-1.5 mb-2">
+                <span
+                  class="px-2.5 py-0.5 rounded-full bg-sky-500/10 text-sky-300 font-mono text-[11px] border border-sky-400/25">
+                  Faculty Mentor
+                </span>
+                <span class="text-[10px] font-mono text-muted-foreground/70">AIML Dept</span>
+              </div>
+
+              <h3 class="text-xl sm:text-2xl font-serif-heading font-normal text-white group-hover:text-sky-300 transition-colors leading-tight">
+                Prof. Nithya
+              </h3>
+              <p class="text-xs font-mono text-sky-400/80 mt-1 leading-snug">
+                Faculty Mentor • SIT
+              </p>
+            </div>
           </div>
-        </div>
-        <div class="flex-1 text-center sm:text-left">
-          <div class="flex flex-wrap items-center justify-center sm:justify-between gap-2 mb-3">
-            <span class="px-3 py-1 rounded-full bg-sky-500/10 text-sky-300 font-mono text-xs border border-sky-400/20">
-              Faculty Mentor
-            </span>
-            <span class="text-[11px] font-mono text-muted-foreground/70">AIML Dept</span>
-          </div>
-          <h3 class="text-2xl font-serif-heading font-normal text-white group-hover:text-sky-300 transition-colors">
-            Prof. Nithya
-          </h3>
-          <p class="text-xs font-mono text-sky-400/80 mt-0.5">Faculty Mentor • Srinivas Institute of Technology</p>
+
+          <!-- Full-Width Quote -->
           <p
-            class="text-xs sm:text-sm text-muted-foreground mt-4 leading-relaxed italic border-l-2 border-sky-400/40 pl-3 bg-sky-500/[0.02] py-2 rounded-r-xl">
-            "Grateful for the guidance and unwavering support extended to the ML Club and its student community."
+            class="w-full text-xs sm:text-[13px] text-slate-300 leading-relaxed italic border-l-2 border-sky-400/40 pl-3.5 bg-sky-500/[0.04] py-3 rounded-r-xl my-2">
+            "Heartfelt thanks to Prof. Nithya for her constant encouragement, thoughtful academic mentorship, and active support in organizing student workshops and club initiatives."
           </p>
-          <div
-            class="pt-4 mt-4 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-muted-foreground/70">
-            <span>Srinivas Institute of Technology</span>
-            <span class="text-sky-400 flex items-center gap-1">
-              <i data-lucide="star" class="w-3.5 h-3.5"></i> Faculty Mentor
-            </span>
-          </div>
+        </div>
+
+        <!-- Full-Width Footer -->
+        <div
+          class="pt-3.5 mt-3 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-muted-foreground/70">
+          <span>Srinivas Institute of Technology</span>
+          <span class="text-sky-400 flex items-center gap-1">
+            <i data-lucide="star" class="w-3.5 h-3.5"></i> Faculty Mentor
+          </span>
         </div>
       </div>
 
@@ -2633,10 +2758,10 @@
       <!-- Main Big Photo Container -->
       <div id="bigPhotoStage"
         class="relative w-full h-[460px] sm:h-[560px] md:h-[640px] rounded-3xl overflow-hidden liquid-glass border border-white/15 shadow-2xl group select-none cursor-pointer"
-        onclick="openCurrentBigPhotoLightbox()" title="Click to view full screen • Scroll wheel to switch photo">
+        onclick="openCurrentBigPhotoLightbox()" title="Click to view full screen">
 
         <!-- Big Photo Image with Crossfade Transition -->
-        <img id="bigPhotoImg" src="" alt="ML Club Moment"
+        <img id="bigPhotoImg" src="images/intro_session.jpg" alt="Introduction to ML Club"
           class="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-[1.02]">
 
         <!-- Gradient Vignette Scrim for Contrast -->
@@ -2657,7 +2782,7 @@
           <div class="flex items-center gap-2">
             <span id="bigPhotoCategory"
               class="px-4 py-1.5 rounded-full text-xs font-mono liquid-glass border border-cyan-400/40 text-cyan-300 backdrop-blur-md shadow-lg">
-              Inauguration & Induction
+              Orientation & Induction
             </span>
           </div>
 
@@ -2666,7 +2791,7 @@
             <span id="bigPhotoCounterPill"
               class="liquid-glass px-4 py-1.5 rounded-full text-xs font-mono text-white/90 border border-white/20 backdrop-blur-md flex items-center gap-2 shadow-lg">
               <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-              <span id="bigPhotoIndexLabel">01 / 03</span>
+              <span id="bigPhotoIndexLabel">01 / 02</span>
             </span>
             <button onclick="event.stopPropagation(); openCurrentBigPhotoLightbox()"
               class="liquid-glass p-2.5 rounded-full text-white/80 hover:text-white border border-white/20 transition-all hover:scale-105 cursor-pointer shadow-lg"
@@ -2691,23 +2816,22 @@
           <div class="max-w-3xl space-y-2.5">
             <h3 id="bigPhotoTitle"
               class="text-2xl sm:text-4xl font-serif-heading font-normal text-white drop-shadow-lg">
-              ML Club SIT Grand Inauguration
+              Introduction to ML Club
             </h3>
             <p id="bigPhotoDesc" class="text-xs sm:text-sm text-gray-200/90 leading-relaxed drop-shadow line-clamp-2">
-              The inaugural assembly of the Machine Learning Club at Srinivas Institute of Technology with mentors,
-              leadership, and students.
+              Core team presenting an introductory orientation to students covering machine learning pillars, lab setups, and neural research tracks.
             </p>
             <div class="pt-2 flex flex-wrap items-center gap-3 sm:gap-4 text-xs font-mono text-cyan-300 drop-shadow">
               <span id="bigPhotoVenue" class="flex items-center gap-1.5">
-                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-cyan-400"></i> SIT Main Auditorium
+                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-cyan-400"></i> SIT Computer Lab, Valachil
               </span>
               <span>•</span>
               <span id="bigPhotoDate" class="flex items-center gap-1.5 text-purple-300">
-                <i data-lucide="calendar" class="w-3.5 h-3.5 text-purple-400"></i> October 2024
+                <i data-lucide="calendar" class="w-3.5 h-3.5 text-purple-400"></i> September 2026
               </span>
               <span>•</span>
               <span class="text-white/60 text-[11px] hidden sm:inline-flex items-center gap-1">
-                <i data-lucide="mouse-pointer" class="w-3 h-3 text-cyan-400"></i> Scroll wheel or swipe to change
+                <i data-lucide="mouse-pointer" class="w-3 h-3 text-cyan-400"></i> Click arrows or thumbnails to change
               </span>
             </div>
           </div>
@@ -2725,11 +2849,11 @@
         <!-- Mini Helper Hint -->
         <div class="flex items-center gap-3 text-xs font-mono text-muted-foreground/70 shrink-0">
           <span class="flex items-center gap-1">
-            <i data-lucide="move-horizontal" class="w-3.5 h-3.5 text-cyan-400"></i> Scroll or click photo
+            <i data-lucide="arrow-left-right" class="w-3.5 h-3.5 text-cyan-400"></i> Click arrows to switch
           </span>
           <span>•</span>
           <span class="flex items-center gap-1">
-            <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-purple-400"></i> Click to expand
+            <i data-lucide="maximize-2" class="w-3.5 h-3.5 text-purple-400"></i> Click photo to expand
           </span>
         </div>
       </div>
@@ -2837,19 +2961,14 @@
             <i data-lucide="corner-right-down" class="w-3.5 h-3.5 text-cyan-300 animate-bounce"></i>
           </div>
 
-          <!-- Pulsing Highlighted Registration Button -->
+          <!-- Sleek Liquid Glass Registration CTA -->
           <div class="relative w-fit">
-            <!-- Glow bloom behind button -->
-            <div
-              class="absolute -inset-1 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 rounded-full blur-md opacity-60 pointer-events-none animate-pulse">
-            </div>
-
             <button onclick="openRegistrationModal()"
-              class="relative liquid-glass rounded-full px-8 py-4 text-base sm:text-lg text-white hover:scale-105 active:scale-95 transition-all flex items-center gap-3.5 font-semibold border-2 border-cyan-300/80 bg-gradient-to-r from-cyan-500/35 via-blue-600/40 to-purple-600/30 shadow-[0_0_35px_rgba(6,182,212,0.45)] hover:shadow-[0_0_60px_rgba(6,182,212,0.75)] cursor-pointer group">
-              <i data-lucide="sparkles" class="w-5 h-5 text-cyan-300 animate-pulse"></i>
+              class="relative liquid-glass rounded-full px-8 py-4 text-base sm:text-lg text-white hover:text-cyan-200 hover:scale-105 active:scale-95 transition-all flex items-center gap-3.5 font-medium border border-white/20 hover:border-cyan-400/50 shadow-2xl cursor-pointer group">
+              <i data-lucide="sparkles" class="w-5 h-5 text-cyan-300"></i>
               <span class="tracking-wide">Begin Journey • Open Registration</span>
               <div
-                class="w-7 h-7 rounded-full bg-cyan-400/20 border border-cyan-400/40 flex items-center justify-center group-hover:translate-x-1.5 transition-transform">
+                class="w-7 h-7 rounded-full liquid-glass border border-white/20 flex items-center justify-center group-hover:translate-x-1.5 transition-transform">
                 <i data-lucide="arrow-right" class="w-4 h-4 text-cyan-300"></i>
               </div>
             </button>
@@ -3056,26 +3175,25 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- FOOTER                                                                    -->
+  <!-- FOOTER (Slim & Compact Blurred Background)                                -->
   <!-- ========================================================================= -->
-  <footer class="relative z-10 border-t border-white/10 py-12 px-6 bg-[#001424]/40 backdrop-blur-md">
+  <footer class="relative z-10 border-t border-white/5 py-4 sm:py-5 px-6 bg-[#001424]/30 backdrop-blur-sm">
     <div
-      class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-muted-foreground">
-      <div class="space-y-1 text-center md:text-left">
-        <div class="text-sm font-serif-heading text-white">ML CLUB • Srinivas Institute of Technology</div>
-        <div>Merlapadavu, Valachil, Farangipete Post, Mangaluru, Karnataka - 574143</div>
+      class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4 text-xs text-muted-foreground">
+      <div class="space-y-0.5 text-center md:text-left">
+        <div class="text-sm font-serif-heading text-white">NAVATVA CLUB • Srinivas Institute of Technology</div>
+        <div class="text-[11px] text-muted-foreground/80">Merlapadavu, Valachil, Farangipete Post, Mangaluru, Karnataka - 574143</div>
       </div>
-      <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2.5">
+      <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-[12px]">
         <a href="#hero" class="hover:text-white transition-colors">Home</a>
         <a href="#modules" class="hover:text-white transition-colors">Modules</a>
         <a href="#projects" class="hover:text-white transition-colors">Projects</a>
         <a href="#team" class="hover:text-white transition-colors">Core Team</a>
         <a href="#mentors" class="hover:text-white transition-colors">Mentors</a>
         <a href="#gallery" class="hover:text-white transition-colors">Visionaries</a>
-        <a href="#join" onclick="openRegistrationModal()" class="hover:text-white transition-colors cursor-pointer">Join Club</a>
         <a href="members.html" class="hover:text-white transition-colors">Club Members</a>
       </div>
-      <div class="text-muted-foreground/60">
+      <div class="text-[11px] text-muted-foreground/60">
         <span onclick="openAuthModal()" class="cursor-pointer select-none hover:text-white/80 transition-colors"
           title="">©</span> 2026 Srinivas Institute of Technology. All rights reserved.
       </div>
@@ -3729,24 +3847,34 @@
           card.appendChild(shine);
         }
         const shine = card.querySelector('.card-shine');
+        let tiltRaf = null;
+
+        card.addEventListener('mouseenter', () => {
+          card.style.transition = 'none';
+        });
 
         card.addEventListener('mousemove', (e) => {
-          const rect = card.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          const centerX = rect.width / 2;
-          const centerY = rect.height / 2;
-          const rotateX = ((y - centerY) / centerY) * -8;
-          const rotateY = ((x - centerX) / centerX) * 8;
-          card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px) scale(1.01)`;
-          card.style.boxShadow = `0 16px 40px -10px rgba(56,189,248,0.2)`;
-          const pct_x = (x / rect.width) * 100;
-          const pct_y = (y / rect.height) * 100;
-          shine.style.setProperty('--shine-x', pct_x + '%');
-          shine.style.setProperty('--shine-y', pct_y + '%');
+          if (tiltRaf) cancelAnimationFrame(tiltRaf);
+          tiltRaf = requestAnimationFrame(() => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -7;
+            const rotateY = ((x - centerX) / centerX) * 7;
+            card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px) scale(1.01)`;
+            card.style.boxShadow = `0 16px 40px -10px rgba(56,189,248,0.2)`;
+            const pct_x = (x / rect.width) * 100;
+            const pct_y = (y / rect.height) * 100;
+            shine.style.setProperty('--shine-x', pct_x + '%');
+            shine.style.setProperty('--shine-y', pct_y + '%');
+          });
         });
 
         card.addEventListener('mouseleave', () => {
+          if (tiltRaf) cancelAnimationFrame(tiltRaf);
+          card.style.transition = 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease';
           card.style.transform = '';
           card.style.boxShadow = '';
         });
@@ -3826,31 +3954,15 @@
     // IMPRESSIVE MOUSE HOVER EFFECTS (Desktop-only to ensure 0 lag on mobile)
     // =============================================================
     if (!isMobileDevice && window.matchMedia('(pointer: fine)').matches) {
-      // ── 1. CUSTOM CURSOR + TRAIL ──
+      // ── 1. CLEAN INVERTED FOCUS RING (Apple / Awwwards Style) ──
       const cursorOuter = document.createElement('div');
       const cursorInner = document.createElement('div');
       cursorOuter.id = 'cursorOuter';
       cursorInner.id = 'cursorInner';
-      cursorOuter.style.cssText += '; left:0; top:0;';
-      cursorInner.style.cssText += '; left:0; top:0;';
+      cursorOuter.style.cssText = 'left:0; top:0;';
+      cursorInner.style.cssText = 'left:0; top:0;';
       document.body.appendChild(cursorOuter);
       document.body.appendChild(cursorInner);
-
-      const TRAIL_COUNT = 6;
-      const trailDots = [];
-      for (let i = 0; i < TRAIL_COUNT; i++) {
-        const dot = document.createElement('div');
-        dot.className = 'cursor-trail-dot';
-        const frac = 1 - i / TRAIL_COUNT;
-        dot.style.cssText = `
-          left:0; top:0;
-          opacity:${frac * 0.5};
-          width:${Math.max(2, 4 - i * 0.4)}px;
-          height:${Math.max(2, 4 - i * 0.4)}px;
-        `;
-        document.body.appendChild(dot);
-        trailDots.push({ el: dot, x: -100, y: -100 });
-      }
 
       let mouseX = -200, mouseY = -200;
       let outerX = -200, outerY = -200;
@@ -3861,54 +3973,35 @@
         cursorInner.style.transform = `translate3d(${mouseX}px,${mouseY}px,0) translate(-50%,-50%)`;
       }, { passive: true });
 
+      document.addEventListener('mousedown', () => document.body.classList.add('cursor-click'));
+      document.addEventListener('mouseup', () => document.body.classList.remove('cursor-click'));
+
       function cursorLoop() {
-        outerX += (mouseX - outerX) * 0.22;
-        outerY += (mouseY - outerY) * 0.22;
+        // Silky, weightless lerp for the outer inverted lens
+        outerX += (mouseX - outerX) * 0.18;
+        outerY += (mouseY - outerY) * 0.18;
         cursorOuter.style.transform = `translate3d(${outerX}px,${outerY}px,0) translate(-50%,-50%)`;
-
-        trailDots[0].x += (mouseX - trailDots[0].x) * 0.55;
-        trailDots[0].y += (mouseY - trailDots[0].y) * 0.55;
-        trailDots[0].el.style.transform = `translate3d(${trailDots[0].x}px,${trailDots[0].y}px,0) translate(-50%,-50%)`;
-
-        for (let i = 1; i < TRAIL_COUNT; i++) {
-          const lerp = 0.42 - i * 0.03;
-          trailDots[i].x += (trailDots[i - 1].x - trailDots[i].x) * lerp;
-          trailDots[i].y += (trailDots[i - 1].y - trailDots[i].y) * lerp;
-          trailDots[i].el.style.transform = `translate3d(${trailDots[i].x}px,${trailDots[i].y}px,0) translate(-50%,-50%)`;
-        }
         requestAnimationFrame(cursorLoop);
       }
       cursorLoop();
 
-      const interactiveSelectors = 'a, button, [onclick], .tilt-card, input, select, textarea, label';
+      const interactiveSelectors = 'a, button, [onclick], .tilt-card, input, select, textarea, label, [role="button"]';
       document.querySelectorAll(interactiveSelectors).forEach(el => {
         el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
         el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
       });
 
-      // ── 2. CLICK RIPPLE BURST ──
+      // ── 2. CLICK RIPPLE BURST (Inverted shockwave) ──
       document.addEventListener('click', (e) => {
         const r1 = document.createElement('div');
         r1.className = 'click-ripple';
-        r1.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;width:60px;height:60px;border:1.5px solid rgba(56,189,248,0.7);`;
+        r1.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;width:56px;height:56px;`;
         document.body.appendChild(r1);
-        setTimeout(() => { r1.remove(); }, 650);
+        setTimeout(() => { r1.remove(); }, 520);
       });
 
-      // ── 3. MAGNETIC EFFECT ON NAV BUTTONS ──
-      document.querySelectorAll('header button, header a').forEach(btn => {
-        btn.addEventListener('mousemove', (e) => {
-          const rect = btn.getBoundingClientRect();
-          const dx = (e.clientX - (rect.left + rect.width / 2)) * 0.22;
-          const dy = (e.clientY - (rect.top + rect.height / 2)) * 0.22;
-          btn.style.transform = `translate(${dx}px,${dy}px) scale(1.04)`;
-        });
-        btn.addEventListener('mouseleave', () => {
-          btn.style.transition = 'transform 0.4s cubic-bezier(0.16,1,0.3,1)';
-          btn.style.transform = '';
-          setTimeout(() => btn.style.transition = '', 400);
-        });
-      });
+      // ── 3. STATIC NAV BUTTONS (No hover displacement/movement) ──
+      // Magnetic hover movement disabled to keep navbar elements firmly locked in place
 
       // ── 4. SPOTLIGHT EFFECT (Throttled) ──
       const spotlightCanvas = document.createElement('canvas');
@@ -3945,223 +4038,6 @@
     }
 
 
-    // -------------------------------------------------------------
-    // 6. POSH AMBIENT MUSIC SYNTHESIZER (Web Audio API)
-    // -------------------------------------------------------------
-    let audioCtx = null;
-    let masterGain = null;
-    let isPlaying = false;
-    let arpInterval = null;
-    let padOscillators = [];
-    let reverbNode = null;
-
-    // Elegant minor/major chord tones for ambient pads (Hz) — A minor pentatonic palette
-    const PAD_CHORDS = [
-      [110.00, 130.81, 164.81, 196.00],  // Am
-      [98.00, 123.47, 155.56, 185.00],  // G
-      [146.83, 174.61, 220.00, 261.63],  // Dm
-      [130.81, 164.81, 196.00, 246.94],  // C
-    ];
-
-    // Arpeggio melody notes (Hz) — soft high piano-like tones
-    const ARP_MELODY = [
-      523.25, 587.33, 659.25, 783.99,
-      880.00, 783.99, 659.25, 587.33,
-      523.25, 493.88, 440.00, 493.88,
-      523.25, 659.25, 783.99, 880.00
-    ];
-
-    function createReverb(ctx) {
-      const convolver = ctx.createConvolver();
-      const rate = ctx.sampleRate;
-      const length = rate * 3.5;
-      const impulse = ctx.createBuffer(2, length, rate);
-      for (let ch = 0; ch < 2; ch++) {
-        const data = impulse.getChannelData(ch);
-        for (let i = 0; i < length; i++) {
-          data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, 2.5);
-        }
-      }
-      convolver.buffer = impulse;
-      return convolver;
-    }
-
-    function buildAmbientEngine() {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const now = audioCtx.currentTime;
-
-      masterGain = audioCtx.createGain();
-      masterGain.gain.setValueAtTime(0.0001, now);
-
-      // Reverb
-      reverbNode = createReverb(audioCtx);
-      const reverbGain = audioCtx.createGain();
-      reverbGain.gain.setValueAtTime(0.45, now);
-
-      // Master low-pass warmth filter
-      const warmFilter = audioCtx.createBiquadFilter();
-      warmFilter.type = 'lowpass';
-      warmFilter.frequency.setValueAtTime(2800, now);
-      warmFilter.Q.setValueAtTime(0.6, now);
-
-      // High shelf softener
-      const highShelf = audioCtx.createBiquadFilter();
-      highShelf.type = 'highshelf';
-      highShelf.frequency.setValueAtTime(4000, now);
-      highShelf.gain.setValueAtTime(-9, now);
-
-      // Chain: pads → warmFilter → highShelf → reverb+dry → master
-      warmFilter.connect(highShelf);
-      highShelf.connect(reverbNode);
-      reverbNode.connect(reverbGain);
-      reverbGain.connect(masterGain);
-      highShelf.connect(masterGain);  // dry signal
-      masterGain.connect(audioCtx.destination);
-
-      // ── PAD LAYER: layered sine + triangle oscillators per chord tone ──
-      const chordTones = PAD_CHORDS[0];
-      chordTones.forEach((freq, idx) => {
-        ['sine', 'triangle'].forEach((type, wIdx) => {
-          const osc = audioCtx.createOscillator();
-          const oscGain = audioCtx.createGain();
-
-          osc.type = type;
-          osc.frequency.setValueAtTime(freq * (wIdx === 1 ? 0.998 : 1), now); // slight detune for richness
-          osc.frequency.linearRampToValueAtTime(freq * (wIdx === 1 ? 1.001 : 1), now + 8);
-
-          // Gentle LFO vibrato
-          const lfo = audioCtx.createOscillator();
-          const lfoGain = audioCtx.createGain();
-          lfo.type = 'sine';
-          lfo.frequency.setValueAtTime(0.18 + idx * 0.04, now);
-          lfoGain.gain.setValueAtTime(0.35, now);
-          lfo.connect(lfoGain);
-          lfoGain.connect(osc.frequency);
-          lfo.start(now);
-
-          oscGain.gain.setValueAtTime(type === 'sine' ? 0.055 : 0.025, now);
-
-          osc.connect(oscGain);
-          oscGain.connect(warmFilter);
-          osc.start(now);
-          padOscillators.push({ osc, oscGain, lfo });
-        });
-      });
-
-      // ── SUB BASS DRONE: very soft 55Hz sine ──
-      const sub = audioCtx.createOscillator();
-      const subGain = audioCtx.createGain();
-      sub.type = 'sine';
-      sub.frequency.setValueAtTime(55, now);
-      subGain.gain.setValueAtTime(0.04, now);
-      sub.connect(subGain);
-      subGain.connect(masterGain);
-      sub.start(now);
-      padOscillators.push({ osc: sub, oscGain: subGain, lfo: null });
-
-      // ── ARPEGGIO / MELODIC LAYER ──
-      let arpIdx = 0;
-      let chordIdx = 0;
-      let chordTimer = 0;
-
-      function playArpNote() {
-        if (!isPlaying || !audioCtx) return;
-        const t = audioCtx.currentTime;
-        const freq = ARP_MELODY[arpIdx % ARP_MELODY.length];
-
-        const noteOsc = audioCtx.createOscillator();
-        const noteGain = audioCtx.createGain();
-        noteOsc.type = 'sine';
-        noteOsc.frequency.setValueAtTime(freq, t);
-
-        // Soft attack-decay envelope
-        noteGain.gain.setValueAtTime(0, t);
-        noteGain.gain.linearRampToValueAtTime(0.028, t + 0.06);
-        noteGain.gain.exponentialRampToValueAtTime(0.001, t + 1.1);
-
-        noteOsc.connect(noteGain);
-        noteGain.connect(reverbGain);
-        noteGain.connect(masterGain);
-
-        noteOsc.start(t);
-        noteOsc.stop(t + 1.3);
-
-        arpIdx++;
-        chordTimer++;
-
-        // Shift pad chord every 8 arp notes
-        if (chordTimer >= 8) {
-          chordTimer = 0;
-          chordIdx = (chordIdx + 1) % PAD_CHORDS.length;
-          const newTones = PAD_CHORDS[chordIdx];
-          const padOscList = padOscillators.filter(p => p.lfo !== null && p.osc.type !== 'sine' || true);
-          // Gently shift pad frequencies
-          let padIdx = 0;
-          padOscillators.forEach((p) => {
-            if (p.lfo && padIdx < newTones.length) {
-              const wIdx = Math.floor(padIdx / newTones.length);
-              const toneFreq = newTones[padIdx % newTones.length];
-              p.osc.frequency.linearRampToValueAtTime(toneFreq, t + 6);
-              padIdx++;
-            }
-          });
-        }
-      }
-
-      arpInterval = setInterval(playArpNote, 620); // ~97 BPM gentle feel
-      playArpNote(); // play immediately
-    }
-
-    function toggleAudio() {
-      const icon = document.getElementById('audioIcon');
-      const btn = document.getElementById('audioBtn');
-
-      if (!audioCtx) {
-        buildAmbientEngine();
-      }
-
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-
-      if (isPlaying) {
-        // Fade out gracefully
-        masterGain.gain.setTargetAtTime(0.0001, audioCtx.currentTime, 0.8);
-        isPlaying = false;
-        clearInterval(arpInterval);
-        arpInterval = null;
-        icon.setAttribute('data-lucide', 'music');
-        btn.style.boxShadow = '';
-      } else {
-        // Fade in lushly
-        masterGain.gain.setTargetAtTime(0.72, audioCtx.currentTime, 3.5);
-        isPlaying = true;
-        if (!arpInterval) {
-          let arpIdx2 = 0;
-          arpInterval = setInterval(() => {
-            if (!isPlaying || !audioCtx) return;
-            const t = audioCtx.currentTime;
-            const freq = ARP_MELODY[arpIdx2 % ARP_MELODY.length];
-            const noteOsc = audioCtx.createOscillator();
-            const noteGain = audioCtx.createGain();
-            noteOsc.type = 'sine';
-            noteOsc.frequency.setValueAtTime(freq, t);
-            noteGain.gain.setValueAtTime(0, t);
-            noteGain.gain.linearRampToValueAtTime(0.028, t + 0.06);
-            noteGain.gain.exponentialRampToValueAtTime(0.001, t + 1.1);
-            noteOsc.connect(noteGain);
-            noteGain.connect(masterGain);
-            noteOsc.start(t);
-            noteOsc.stop(t + 1.3);
-            arpIdx2++;
-          }, 620);
-        }
-        icon.setAttribute('data-lucide', 'volume-2');
-        // Subtle glowing cyan pulse on the button when music plays
-        btn.style.boxShadow = '0 0 20px 5px rgba(56,189,248,0.4), 0 0 40px 10px rgba(129,140,248,0.2)';
-      }
-      lucide.createIcons();
-    }
 
 
 
@@ -4728,35 +4604,23 @@
     const DEFAULT_CLUB_MOMENTS = [
       {
         id: 'cm_1',
-        isBlank: true,
-        src: 'images/gallery_1.jpg',
-        fallback: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='900' viewBox='0 0 1600 900'%3E%3Crect width='100%25' height='100%25' fill='%23050c18'/%3E%3C/svg%3E",
-        title: 'Photo Space Reserved',
-        category: 'Space Reserved',
-        color: 'cyan',
-        venue: '',
-        date: '',
-        desc: 'This space is reserved for Photo 01. When ready, place your photo in images/gallery_1.jpg.'
-      },
-      {
-        id: 'cm_2',
         src: 'images/intro_session.jpg',
-        fallback: 'file:///C:/Users/HP/.gemini/antigravity-ide/brain/209f3122-2536-466b-947f-01af2718af77/.user_uploaded/media_1790505991581.jpg',
+        fallback: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1600&q=80',
         title: 'Introduction to ML Club',
         category: 'Orientation & Induction',
         color: 'emerald',
-        venue: 'SIT Computer Lab',
+        venue: 'SIT Computer Lab, Valachil',
         date: 'September 2026',
         desc: 'Core team presenting an introductory orientation to students covering machine learning pillars, lab setups, and neural research tracks.'
       },
       {
-        id: 'cm_3',
+        id: 'cm_2',
         src: 'images/github_session.jpg',
-        fallback: 'file:///C:/Users/HP/.gemini/antigravity-ide/brain/209f3122-2536-466b-947f-01af2718af77/.user_uploaded/media_1790505991595.jpg',
+        fallback: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80',
         title: 'Session on Git & GitHub',
         category: 'Technical Workshop',
         color: 'purple',
-        venue: 'SIT Seminar Hall, Valachil',
+        venue: 'SIT Seminar Hall, Arkula, Valachil',
         date: 'September 2026',
         desc: 'Interactive technical workshop educating students on distributed version control, Git branching strategies, and open-source GitHub collaboration.'
       }
@@ -4769,15 +4633,7 @@
     let isWheelThrottled = false;
 
     function getClubGalleryItems() {
-      try {
-        const stored = JSON.parse(localStorage.getItem('sit_ml_club_gallery_photos_v4') || '[]');
-        if (stored && stored.length) {
-          return [...stored, ...DEFAULT_CLUB_MOMENTS].slice(0, 3);
-        }
-        return [...DEFAULT_CLUB_MOMENTS];
-      } catch (e) {
-        return [...DEFAULT_CLUB_MOMENTS];
-      }
+      return [...DEFAULT_CLUB_MOMENTS];
     }
 
     function renderBigPhotoGallery() {
@@ -4809,6 +4665,7 @@
 
       setTimeout(() => {
         img.src = item.src;
+        img.alt = item.title;
         img.onerror = () => { img.onerror = null; img.src = item.fallback; };
         if (title) title.textContent = item.title;
         if (desc) desc.textContent = item.desc;
@@ -4900,26 +4757,10 @@
       updateBigPhotoDisplay(true);
     }
 
-    // Wheel Scroll on the Big Photo Space to Flip Photos (Debounced)
-    (function initBigPhotoScrollListener() {
+    // Mouse wheel photo changing removed so page scrolling works completely naturally over photo
+    (function initBigPhotoTouchListener() {
       const stage = document.getElementById('bigPhotoStage');
       if (!stage) return;
-
-      stage.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        if (isWheelThrottled) return;
-        isWheelThrottled = true;
-
-        if (e.deltaY > 15 || e.deltaX > 15) {
-          stepBigPhoto(1);
-        } else if (e.deltaY < -15 || e.deltaX < -15) {
-          stepBigPhoto(-1);
-        }
-
-        setTimeout(() => {
-          isWheelThrottled = false;
-        }, 380);
-      }, { passive: false });
 
       // Touch Swipe on Big Photo Space
       let touchStartX = 0;
@@ -4961,6 +4802,7 @@
       const desc = document.getElementById('clbDesc');
 
       img.src = item.src;
+      img.alt = item.title;
       img.onerror = () => { img.onerror = null; img.src = item.fallback; };
       title.textContent = item.title;
       cat.textContent = item.category;
@@ -5112,159 +4954,229 @@
 
       // Observe new stat cards for scroll animation
       document.querySelectorAll('.scroll-reveal-scale').forEach(el => scrollObserver.observe(el));
-
-      // Auto-play music on first gesture (defined below)
-      let musicStarted = false;
-
-      function startMusicOnFirstGesture() {
-        if (musicStarted) return;
-        musicStarted = true;
-
-        ['click', 'scroll', 'keydown', 'touchstart', 'mousemove'].forEach(evt => {
-          document.removeEventListener(evt, startMusicOnFirstGesture, { capture: true });
-        });
-
-        if (!audioCtx) { buildAmbientEngine(); }
-        if (audioCtx.state === 'suspended') { audioCtx.resume(); }
-
-        masterGain.gain.setTargetAtTime(0.72, audioCtx.currentTime, 3.5);
-        isPlaying = true;
-
-        if (!arpInterval) {
-          let arpIdx3 = 0;
-          arpInterval = setInterval(() => {
-            if (!isPlaying || !audioCtx) return;
-            const t = audioCtx.currentTime;
-            const freq = ARP_MELODY[arpIdx3 % ARP_MELODY.length];
-            const noteOsc = audioCtx.createOscillator();
-            const noteGain = audioCtx.createGain();
-            noteOsc.type = 'sine';
-            noteOsc.frequency.setValueAtTime(freq, t);
-            noteGain.gain.setValueAtTime(0, t);
-            noteGain.gain.linearRampToValueAtTime(0.028, t + 0.06);
-            noteGain.gain.exponentialRampToValueAtTime(0.001, t + 1.1);
-            noteOsc.connect(noteGain);
-            noteGain.connect(masterGain);
-            noteOsc.start(t);
-            noteOsc.stop(t + 1.3);
-            arpIdx3++;
-          }, 620);
-        }
-
-        const icon = document.getElementById('audioIcon');
-        const btn = document.getElementById('audioBtn');
-        icon.setAttribute('data-lucide', 'volume-2');
-        btn.style.boxShadow = '0 0 20px 5px rgba(56,189,248,0.4), 0 0 40px 10px rgba(129,140,248,0.2)';
-        lucide.createIcons();
-      }
-
-      ['click', 'scroll', 'keydown', 'touchstart', 'mousemove'].forEach(evt => {
-        document.addEventListener(evt, startMusicOnFirstGesture, { capture: true, once: false, passive: true });
-      });
-
-      setTimeout(() => {
-        const btn = document.getElementById('audioBtn');
-        if (btn && !musicStarted) {
-          btn.style.animation = 'pulse-glow 2s ease-in-out infinite';
-        }
-      }, 1500);
     });
   </script>
 
   <!-- ========================================================================= -->
-  <!-- DIRECT AUTOPLAY CINEMATIC VIDEO INTRO (TAP ANYWHERE TO SKIP)               -->
+  <!-- CINEMATIC VIDEO INTRO CONTROLLER & CLEAN EXIT ENGINE                       -->
   <!-- ========================================================================= -->
   <script>
-    (function initDirectVideoIntro() {
+    (function initIntroExperience() {
       const stage = document.getElementById('intro-stage');
       const video = document.getElementById('introVideo');
 
-      if (!stage || !video) {
-        document.body.classList.add('website-ready');
-        return;
-      }
-
-      // Lock body scrolling while intro is playing
-      document.body.style.overflow = 'hidden';
+      if (!stage || !video) return;
 
       let exited = false;
+
+      // Lock scrolling while intro is active
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
 
       function exitIntro() {
         if (exited) return;
         exited = true;
 
-        // Triggers early 350ms bokeh blur on video + smooth 1270ms fade-out
+        // Apply smooth 1270ms dissolve class
         stage.classList.add('exit');
 
-        // Allow ambient music to softly begin
-        try {
-          if (typeof startMusicOnFirstGesture === 'function') startMusicOnFirstGesture();
-        } catch (e) { }
+        // Restore page scrolling immediately
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
 
-        // Clean up DOM and restore page scrolling smoothly AFTER the 1270ms fade-out completes
+        // Pause video and clean up after transition
         setTimeout(() => {
-          document.body.style.overflow = '';
-          if (video) {
-            video.pause();
-            try { video.removeAttribute('src'); video.load(); } catch (e) { }
-          }
+          try { video.pause(); } catch(e){}
           if (stage && stage.parentNode) {
             stage.parentNode.removeChild(stage);
           }
-        }, 1320);
+        }, 1350);
       }
 
-      // Tap / Click anywhere on screen to skip
-      stage.addEventListener('click', exitIntro);
-      stage.addEventListener('touchstart', exitIntro, { passive: true });
-      window.addEventListener('keydown', (e) => {
-        if (!exited && (e.key === ' ' || e.key === 'Enter' || e.key === 'Escape')) {
+      // =========================================================================
+      // AUDIO DSP ENGINE: DUCK BACKGROUND MUSIC & BOOST BREAKING BLOCK SFX
+      // =========================================================================
+      let audioCtx = null;
+      let audioSourceNode = null;
+
+      function initAudioDSP() {
+        if (audioCtx) {
+          if (audioCtx.state === 'suspended') {
+            audioCtx.resume().catch(() => {});
+          }
+          return;
+        }
+
+        try {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContextClass) return;
+          audioCtx = new AudioContextClass();
+
+          audioSourceNode = audioCtx.createMediaElementSource(video);
+
+          // 1. Low-Shelf Filter: HEAVY BACKGROUND MUSIC BASS CUT (-18dB)
+          // Eliminates the rumbling basslines and synthesizer bass chords of the music
+          const musicBassCut = audioCtx.createBiquadFilter();
+          musicBassCut.type = 'lowshelf';
+          musicBassCut.frequency.value = 420;
+          musicBassCut.gain.value = -18.0; // Cut background music bass by -18dB (whisper quiet)
+
+          // 2. Wide Peaking Filter: HEAVY BACKGROUND MUSIC HARMONY/PAD CUT (-15dB)
+          // Tones down the background chords, pads, and rhythm progression
+          const musicMidCut1 = audioCtx.createBiquadFilter();
+          musicMidCut1.type = 'peaking';
+          musicMidCut1.frequency.value = 750;
+          musicMidCut1.Q.value = 0.8;
+          musicMidCut1.gain.value = -15.0; // Cut music chord progression by -15dB
+
+          // 3. Peaking Filter: MUSIC LEAD & MELODIC LINE CUT (-12dB)
+          // Keeps any musical synths and melodies far in the background
+          const musicMidCut2 = audioCtx.createBiquadFilter();
+          musicMidCut2.type = 'peaking';
+          musicMidCut2.frequency.value = 1400;
+          musicMidCut2.Q.value = 1.0;
+          musicMidCut2.gain.value = -12.0; // Cut melodic music frequencies by -12dB
+
+          // 4. SFX CRUNCH & IMPACT BOOST: MAXIMUM CLARITY FOR BREAKING BLOCKS (+12dB)
+          // Sweet spot for block fractures, concrete/glass impacts, and stone breaks
+          const sfxCrunchBoost = audioCtx.createBiquadFilter();
+          sfxCrunchBoost.type = 'peaking';
+          sfxCrunchBoost.frequency.value = 3300;
+          sfxCrunchBoost.Q.value = 1.2;
+          sfxCrunchBoost.gain.value = 12.0; // +12dB boost for breaking block sound effects!
+
+          // 5. High-Shelf Filter: CRISP DEBRIS SHATTER & AIR (+8.5dB)
+          const sfxHighShelf = audioCtx.createBiquadFilter();
+          sfxHighShelf.type = 'highshelf';
+          sfxHighShelf.frequency.value = 6200;
+          sfxHighShelf.gain.value = 8.5; // +8.5dB for sharp, sparkling debris & shatter
+
+          // 6. Dynamics Compressor: Glues sound, allows sharp transients through, prevents clipping
+          const compressor = audioCtx.createDynamicsCompressor();
+          compressor.threshold.value = -18;
+          compressor.knee.value = 10;
+          compressor.ratio.value = 4.0;
+          compressor.attack.value = 0.002; // Ultra-fast attack for snappy cracking block transients
+          compressor.release.value = 0.15;
+
+          // 7. Master Output Gain (Low volume level)
+          const masterGain = audioCtx.createGain();
+          masterGain.gain.value = 0.38; // Low output volume
+
+          // Route audio graph: source -> musicBassCut -> musicMidCut1 -> musicMidCut2 -> sfxCrunchBoost -> sfxHighShelf -> compressor -> masterGain -> speakers
+          audioSourceNode.connect(musicBassCut);
+          musicBassCut.connect(musicMidCut1);
+          musicMidCut1.connect(musicMidCut2);
+          musicMidCut2.connect(sfxCrunchBoost);
+          sfxCrunchBoost.connect(sfxHighShelf);
+          sfxHighShelf.connect(compressor);
+          compressor.connect(masterGain);
+          masterGain.connect(audioCtx.destination);
+
+          if (audioCtx.state === 'suspended') {
+            audioCtx.resume().catch(() => {});
+          }
+        } catch (err) {
+          // If CORS or audio routing is unsupported, video plays directly through default audio output
+          console.warn('[AudioDSP] Web Audio engine fallback:', err);
+        }
+      }
+
+      // DO NOT MUTE INTRO VIDEO: Enable unmuted playback with low background music volume
+      video.muted = false;
+      video.defaultMuted = false;
+      video.volume = 0.25; // Low background volume (25%)
+
+      function playWithSound() {
+        if (exited) return;
+        video.muted = false;
+        video.defaultMuted = false;
+        video.volume = 0.25; // Keep background music volume low
+        initAudioDSP();
+        const p = video.play();
+        if (p && typeof p.catch === 'function') {
+          p.catch(() => {});
+        }
+      }
+
+      // 1. Play unmuted immediately
+      playWithSound();
+
+      // 2. Play unmuted on load & buffer lifecycle
+      ['canplay', 'canplaythrough', 'loadeddata', 'loadedmetadata'].forEach(evt => {
+        video.addEventListener(evt, playWithSound);
+      });
+      ['load', 'DOMContentLoaded'].forEach(evt => {
+        window.addEventListener(evt, playWithSound, { once: true });
+      });
+
+      // 3. Play unmuted automatically on any natural presence (moving mouse into window, window focus, scroll)
+      //    WITHOUT needing to press any buttons!
+      ['mousemove', 'pointermove', 'mouseenter', 'mouseover', 'focus', 'touchstart', 'scroll', 'wheel'].forEach(evt => {
+        window.addEventListener(evt, () => {
+          if (!exited) {
+            playWithSound();
+          }
+        }, { passive: true });
+      });
+
+      // Cut the last 2.5 seconds of the intro
+      video.addEventListener('timeupdate', () => {
+        if (exited) return;
+        if (video.duration && !isNaN(video.duration) && video.duration > 3) {
+          // Exit 2.5 seconds before the video ends
+          if (video.currentTime >= (video.duration - 2.5)) {
+            exitIntro();
+          }
+        } else if (video.currentTime >= 24.5) {
+          // Fallback cutoff for ~27s video
           exitIntro();
         }
       });
 
-      // When video ends naturally, transition into website
+      // Exit on video ended
       video.addEventListener('ended', exitIntro);
 
-      // Start fade-out at 25 seconds for the full ~27-second video
-      video.addEventListener('timeupdate', () => {
-        if (!exited && video.currentTime >= 25) {
+      // Skip intro ONLY if Space bar is pressed
+      window.addEventListener('keydown', (e) => {
+        if (!exited && (e.code === 'Space' || e.key === ' ' || e.keyCode === 32)) {
+          e.preventDefault();
           exitIntro();
         }
       });
 
-      // Directly Play Video immediately
-      video.muted = true;
-      video.defaultMuted = true;
-      video.playsInline = true;
-      video.setAttribute('muted', '');
-      video.setAttribute('playsinline', '');
-      video.setAttribute('webkit-playsinline', '');
-
-      function forcePlay() {
-        if (exited) return;
-        video.muted = true;
-        const p = video.play();
-        if (p !== undefined) {
-          p.catch((err) => {
-            console.warn('[Intro] Autoplay waiting for interaction:', err);
-          });
-        }
-      }
-
-      // Try immediately and on all readiness events
-      forcePlay();
-      video.addEventListener('loadedmetadata', forcePlay);
-      video.addEventListener('loadeddata', forcePlay);
-      video.addEventListener('canplay', forcePlay);
-      video.addEventListener('canplaythrough', forcePlay);
-      window.addEventListener('DOMContentLoaded', forcePlay);
-      window.addEventListener('load', forcePlay);
-
-      // Fallback timer: if video finishes or fails to load, exit gracefully after 35s
+      // Safety fallback: exit after 27 seconds maximum
       setTimeout(() => {
         if (!exited) exitIntro();
-      }, 35000);
+      }, 27000);
+    })();
+  </script>
+
+  <!-- ========================================================================= -->
+  <!-- SEAMLESS NAVIGATION & SMOOTH SCROLL GUARANTEE (Zero Scroll Blocking)        -->
+  <!-- ========================================================================= -->
+  <script>
+    (function initSeamlessNavigation() {
+      // Reliable, smooth scrolling for all anchor links and page navigation
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          const href = this.getAttribute('href');
+          if (!href || href === '#') return;
+          const target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            const navHeight = 76;
+            const targetPos = target.getBoundingClientRect().top + window.pageYOffset - navHeight;
+            window.scrollTo({
+              top: Math.max(0, targetPos),
+              behavior: 'smooth'
+            });
+            try {
+              history.pushState(null, null, href);
+            } catch (err) {}
+          }
+        });
+      });
     })();
   </script>
 </body>

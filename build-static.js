@@ -33,14 +33,16 @@ for (const file of filesToCopy) {
   }
 }
 
-// Ensure both hero-video.mp4.MP4 and video.mp4 exist in images/
+// Ensure hero-video.mp4, hero-video.mp4.mp4, and video.mp4 exist in images/
 const imgDir = path.join(__dirname, 'images');
+const heroMp4Double = path.join(imgDir, 'hero-video.mp4.mp4');
 const heroMp4Upper = path.join(imgDir, 'hero-video.mp4.MP4');
 const heroMp4Lower = path.join(imgDir, 'hero-video.mp4');
 const videoMp4 = path.join(imgDir, 'video.mp4');
 
-const sourceVideo = [heroMp4Upper, heroMp4Lower, videoMp4].find(p => fs.existsSync(p));
+const sourceVideo = [heroMp4Double, heroMp4Upper, heroMp4Lower, videoMp4].find(p => fs.existsSync(p));
 if (sourceVideo) {
+  if (!fs.existsSync(heroMp4Double)) { try { fs.copyFileSync(sourceVideo, heroMp4Double); } catch(e){} }
   if (!fs.existsSync(heroMp4Upper)) { try { fs.copyFileSync(sourceVideo, heroMp4Upper); } catch(e){} }
   if (!fs.existsSync(heroMp4Lower)) { try { fs.copyFileSync(sourceVideo, heroMp4Lower); } catch(e){} }
   if (!fs.existsSync(videoMp4)) { try { fs.copyFileSync(sourceVideo, videoMp4); } catch(e){} }
@@ -76,6 +78,39 @@ if (sourceLogo) {
   } catch (err) {
     console.warn('[build-static] Could not sync logo:', err.message);
   }
+}
+
+// Sync Visionaries gallery photos
+const srcIntroCandidates = [
+  "C:\\Users\\HP\\.gemini\\antigravity-ide\\brain\\52e51adf-fcd9-4d67-b5a9-2d78a9366505\\.user_uploaded\\media_1790703005599.jpg",
+  "C:\\Users\\HP\\.gemini\\antigravity-ide\\brain\\209f3122-2536-466b-947f-01af2718af77\\.user_uploaded\\media_1790505991581.jpg"
+];
+const srcGithubCandidates = [
+  "C:\\Users\\HP\\.gemini\\antigravity-ide\\brain\\52e51adf-fcd9-4d67-b5a9-2d78a9366505\\.user_uploaded\\media_1790702907184.jpg",
+  "C:\\Users\\HP\\.gemini\\antigravity-ide\\brain\\209f3122-2536-466b-947f-01af2718af77\\.user_uploaded\\media_1790505991595.jpg"
+];
+
+const destIntro = path.join(__dirname, 'images', 'intro_session.jpg');
+const destGithub = path.join(__dirname, 'images', 'github_session.jpg');
+
+const foundIntro = srcIntroCandidates.find(p => fs.existsSync(p));
+if (foundIntro && !fs.existsSync(destIntro)) {
+  try { fs.copyFileSync(foundIntro, destIntro); console.log('[build-static] Copied intro_session.jpg to images/'); } catch(e){}
+}
+
+const foundGithub = srcGithubCandidates.find(p => fs.existsSync(p));
+if (foundGithub && !fs.existsSync(destGithub)) {
+  try { fs.copyFileSync(foundGithub, destGithub); console.log('[build-static] Copied github_session.jpg to images/'); } catch(e){}
+}
+
+// Sync Principal photo (Dr. Shrinivasa Mayya D)
+const srcPrincipalCandidates = [
+  "C:\\Users\\HP\\.gemini\\antigravity-ide\\brain\\52e51adf-fcd9-4d67-b5a9-2d78a9366505\\.user_uploaded\\media_1790705790687.jpg"
+];
+const destPrincipal = path.join(__dirname, 'images', 'principal_srinivasa_mayya.jpg');
+const foundPrincipal = srcPrincipalCandidates.find(p => fs.existsSync(p));
+if (foundPrincipal && !fs.existsSync(destPrincipal)) {
+  try { fs.copyFileSync(foundPrincipal, destPrincipal); console.log('[build-static] Copied principal_srinivasa_mayya.jpg to images/'); } catch(e){}
 }
 
 // Copy directories recursively

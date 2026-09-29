@@ -21,8 +21,6 @@ out/
 
 # Portable binaries & local installation tools
 node-bin/
-*.bat
-*.ps1
 
 # Large video & archive files (exceeds GitHub 100MB file limit)
 *.mov
@@ -37,6 +35,13 @@ public/hero-video.mp4
 
 # Allow optimized club intro video (<100MB)
 !images/hero-video*
+
+# Allow essential deployment & sync scripts
+!push_to_github.bat
+!copy_photos.bat
+!copy_principal_photo.bat
+!build-static.js
+!copy-video.js
 
 # Temporary diagnostic logs & files
 install-log.txt
