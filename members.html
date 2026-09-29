@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Club Members Directory | ML CLUB - Srinivas Institute of Technology</title>
+  <meta name="description"
+    content="Official student member directory of the Machine Learning Club at Srinivas Institute of Technology (SIT), Mangaluru.">
+
+  <!-- Google Fonts: Instrument Serif, Inter & Space Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            'muted-foreground': 'hsl(var(--muted-foreground))',
+          },
+          fontFamily: {
+            display: ['var(--font-display)'],
+            body: ['var(--font-body)'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --font-display: 'Instrument Serif', serif;
+      --font-body: 'Inter', sans-serif;
+      --background: 201 100% 13%;
+      --foreground: 0 0% 100%;
+      --muted-foreground: 240 4% 66%;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .font-serif-heading {
+      font-family: 'Instrument Serif', serif !important;
+    }
+
+    .liquid-glass {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
+  </style>
+</head>
+
+<body class="bg-[#02101e] text-white min-h-screen flex flex-col relative selection:bg-cyan-500 selection:text-black">
+
+  <!-- Background decorative glows -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div class="absolute -top-40 -left-40 w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px]"></div>
+    <div class="absolute top-1/3 -right-40 w-96 h-96 bg-purple-500/10 rounded-full blur-[120px]"></div>
+    <div class="absolute -bottom-40 left-1/3 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px]"></div>
+  </div>
+
+  <!-- Header Navigation -->
+  <header class="sticky top-0 z-50 w-full border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl liquid-glass border border-cyan-400/40 flex items-center justify-center text-cyan-300 font-bold text-sm shadow-lg group-hover:scale-105 transition-transform">
+          ML
+        </div>
+        <div>
+          <span class="font-serif-heading text-xl text-white block leading-tight group-hover:text-cyan-300 transition-colors">
+            ML Collective
+          </span>
+          <span class="text-[10px] font-mono text-muted-foreground block">Srinivas Institute of Tech</span>
+        </div>
+      </a>
+
+      <div class="flex items-center gap-4">
+        <a href="index.html"
+          class="liquid-glass rounded-full px-5 py-2 text-xs text-cyan-300 hover:text-white hover:scale-105 transition-all flex items-center gap-2 border border-cyan-400/40 font-mono shadow-md">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          <span>Back to Home</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-7xl mx-auto px-6 py-12 w-full relative z-10">
+
+    <!-- Hero / Intro -->
+    <div class="text-center max-w-3xl mx-auto mb-12">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-xs font-mono mb-4">
+        <i data-lucide="users" class="w-3.5 h-3.5"></i>
+        <span>Official Student Roster</span>
+      </div>
+      <h1 class="text-4xl sm:text-6xl font-serif-heading font-normal text-white">
+        Club Members Directory
+      </h1>
+      <p class="text-muted-foreground text-sm sm:text-base mt-4 leading-relaxed">
+        Passionate students driving artificial intelligence, neural networks, machine learning systems, and full-stack software at Srinivas Institute of Technology.
+      </p>
+    </div>
+
+    <!-- Directory Card Wrapper -->
+    <div class="liquid-glass rounded-3xl p-6 sm:p-10 border border-white/15 shadow-2xl relative">
+
+      <!-- Search & Status Bar -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-serif-heading text-white">
+            Registered Student Members
+          </h2>
+          <p id="memberCountDisplay" class="text-xs text-muted-foreground font-mono mt-1">
+            Showing 48 of 48 registered members
+          </p>
+        </div>
+
+        <div class="relative w-full sm:w-80">
+          <i data-lucide="search" class="w-4 h-4 text-muted-foreground absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+          <input type="text" id="memberSearchInput" placeholder="Search members by name..."
+            oninput="filterClubMembers(this.value)"
+            class="w-full pl-10 pr-4 py-2.5 text-xs rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-muted-foreground/50 focus:outline-none focus:border-cyan-400 transition-colors font-mono">
+        </div>
+      </div>
+
+      <!-- Members Grid -->
+      <div id="membersGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-6">
+
+        <!-- Member 01 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-cyan-400/40 transition-all hover:scale-[1.02] group" data-name="pranav pk pranav p k">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/10 border border-cyan-400/30 flex items-center justify-center text-cyan-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">PK</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-cyan-300 transition-colors">Pranav P K</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#01</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 02 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-purple-400/40 transition-all hover:scale-[1.02] group" data-name="anushka parashram yaramalkar">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500/20 to-indigo-500/10 border border-purple-400/30 flex items-center justify-center text-purple-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">AY</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-purple-300 transition-colors">Anushka Parashram Yaramalkar</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#02</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 03 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-emerald-400/40 transition-all hover:scale-[1.02] group" data-name="geetanjali namdev gurav">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-400/30 flex items-center justify-center text-emerald-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">GG</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-emerald-300 transition-colors">Geetanjali Namdev Gurav</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#03</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 04 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-amber-400/40 transition-all hover:scale-[1.02] group" data-name="anupama anant patil">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/10 border border-amber-400/30 flex items-center justify-center text-amber-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">AP</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-amber-300 transition-colors">Anupama Anant Patil</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#04</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 05 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-pink-400/40 transition-all hover:scale-[1.02] group" data-name="n b manesh">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-pink-500/20 to-rose-500/10 border border-pink-400/30 flex items-center justify-center text-pink-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">NM</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-pink-300 transition-colors">N B Manesh</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#05</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-pink-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 06 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-indigo-400/40 transition-all hover:scale-[1.02] group" data-name="gangaram ganapati gurav">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/20 to-violet-500/10 border border-indigo-400/30 flex items-center justify-center text-indigo-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">GG</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-indigo-300 transition-colors">Gangaram Ganapati Gurav</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#06</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 07 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-cyan-400/40 transition-all hover:scale-[1.02] group" data-name="amrutha">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/10 border border-cyan-400/30 flex items-center justify-center text-cyan-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">AM</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-cyan-300 transition-colors">Amrutha</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#07</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 08 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-purple-400/40 transition-all hover:scale-[1.02] group" data-name="isha prasad">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500/20 to-indigo-500/10 border border-purple-400/30 flex items-center justify-center text-purple-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">IP</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-purple-300 transition-colors">Isha Prasad</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#08</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 09 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-emerald-400/40 transition-all hover:scale-[1.02] group" data-name="sanidhya ps sanidhya p s">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-400/30 flex items-center justify-center text-emerald-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">SP</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-emerald-300 transition-colors">Sanidhya P S</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#09</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 10 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-amber-400/40 transition-all hover:scale-[1.02] group" data-name="ritesh">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/10 border border-amber-400/30 flex items-center justify-center text-amber-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">RI</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-amber-300 transition-colors">Ritesh</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#10</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 11 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-pink-400/40 transition-all hover:scale-[1.02] group" data-name="nireeksha b amin">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-pink-500/20 to-rose-500/10 border border-pink-400/30 flex items-center justify-center text-pink-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">NA</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-pink-300 transition-colors">Nireeksha B Amin</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#11</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-pink-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 12 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-indigo-400/40 transition-all hover:scale-[1.02] group" data-name="ms thrisha m.s thrisha">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/20 to-violet-500/10 border border-indigo-400/30 flex items-center justify-center text-indigo-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">MT</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-indigo-300 transition-colors">M S Thrisha</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#12</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 13 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-cyan-400/40 transition-all hover:scale-[1.02] group" data-name="ayshath hafeeza">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/10 border border-cyan-400/30 flex items-center justify-center text-cyan-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">AH</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-cyan-300 transition-colors">Ayshath Hafeeza</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#13</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 14 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-purple-400/40 transition-all hover:scale-[1.02] group" data-name="k nidhi">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500/20 to-indigo-500/10 border border-purple-400/30 flex items-center justify-center text-purple-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">KN</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-purple-300 transition-colors">K Nidhi</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#14</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 15 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-emerald-400/40 transition-all hover:scale-[1.02] group" data-name="vinayak gadig">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-400/30 flex items-center justify-center text-emerald-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">VG</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-emerald-300 transition-colors">Vinayak Gadig</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#15</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 16 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-amber-400/40 transition-all hover:scale-[1.02] group" data-name="ismail anaf anaf ismail">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/10 border border-amber-400/30 flex items-center justify-center text-amber-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">IA</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-amber-300 transition-colors">Ismail Anaf</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#16</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 17 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-pink-400/40 transition-all hover:scale-[1.02] group" data-name="dakshin p v">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-pink-500/20 to-rose-500/10 border border-pink-400/30 flex items-center justify-center text-pink-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">DV</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-pink-300 transition-colors">Dakshin P V</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#17</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-pink-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 18 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-indigo-400/40 transition-all hover:scale-[1.02] group" data-name="koushik s niak koushik s naik">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/20 to-violet-500/10 border border-indigo-400/30 flex items-center justify-center text-indigo-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">KN</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-indigo-300 transition-colors">Koushik S Naik</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#18</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 19 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-cyan-400/40 transition-all hover:scale-[1.02] group" data-name="sanjay">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/10 border border-cyan-400/30 flex items-center justify-center text-cyan-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">SA</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-cyan-300 transition-colors">Sanjay</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#19</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 20 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-purple-400/40 transition-all hover:scale-[1.02] group" data-name="mohammed nizamuddeen">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500/20 to-indigo-500/10 border border-purple-400/30 flex items-center justify-center text-purple-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">MN</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-purple-300 transition-colors">Mohammed Nizamuddeen</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#20</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 21 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-emerald-400/40 transition-all hover:scale-[1.02] group" data-name="akash k s">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-400/30 flex items-center justify-center text-emerald-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">AS</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-emerald-300 transition-colors">Akash K S</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#21</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 22 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-amber-400/40 transition-all hover:scale-[1.02] group" data-name="mohammed zaid zulfukar">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/10 border border-amber-400/30 flex items-center justify-center text-amber-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">MZ</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-amber-300 transition-colors">Mohammed Zaid Zulfukar</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#22</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 23 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-pink-400/40 transition-all hover:scale-[1.02] group" data-name="mohammed zaid zulfukar">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-pink-500/20 to-rose-500/10 border border-pink-400/30 flex items-center justify-center text-pink-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">MZ</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-pink-300 transition-colors">Mohammed Zaid Zulfukar</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#23</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-pink-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 24 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-indigo-400/40 transition-all hover:scale-[1.02] group" data-name="chandana a">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/20 to-violet-500/10 border border-indigo-400/30 flex items-center justify-center text-indigo-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">CA</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-indigo-300 transition-colors">Chandana A</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#24</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 25 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-cyan-400/40 transition-all hover:scale-[1.02] group" data-name="vinayak k raikar vinayak raikar">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/10 border border-cyan-400/30 flex items-center justify-center text-cyan-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">VR</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-cyan-300 transition-colors">Vinayak K Raikar</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#25</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 26 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-purple-400/40 transition-all hover:scale-[1.02] group" data-name="haleemath suha">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500/20 to-indigo-500/10 border border-purple-400/30 flex items-center justify-center text-purple-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">HS</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-purple-300 transition-colors">Haleemath Suha</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#26</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 27 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-emerald-400/40 transition-all hover:scale-[1.02] group" data-name="dhrithi p rai">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-400/30 flex items-center justify-center text-emerald-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">DR</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-emerald-300 transition-colors">Dhrithi P Rai</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#27</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 28 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-amber-400/40 transition-all hover:scale-[1.02] group" data-name="abhishek kn abhishek k n">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/10 border border-amber-400/30 flex items-center justify-center text-amber-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">AN</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-amber-300 transition-colors">Abhishek K N</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#28</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 29 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-pink-400/40 transition-all hover:scale-[1.02] group" data-name="fathima rila">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-pink-500/20 to-rose-500/10 border border-pink-400/30 flex items-center justify-center text-pink-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">FR</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-pink-300 transition-colors">Fathima Rila</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#29</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-pink-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 30 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-indigo-400/40 transition-all hover:scale-[1.02] group" data-name="pratiksha k">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/20 to-violet-500/10 border border-indigo-400/30 flex items-center justify-center text-indigo-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">PK</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-indigo-300 transition-colors">Pratiksha K</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#30</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 31 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-cyan-400/40 transition-all hover:scale-[1.02] group" data-name="arpith bhat">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/10 border border-cyan-400/30 flex items-center justify-center text-cyan-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">AB</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-cyan-300 transition-colors">Arpith Bhat</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#31</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 32 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-purple-400/40 transition-all hover:scale-[1.02] group" data-name="ananya">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500/20 to-indigo-500/10 border border-purple-400/30 flex items-center justify-center text-purple-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">AN</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-purple-300 transition-colors">Ananya</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#32</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 33 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-emerald-400/40 transition-all hover:scale-[1.02] group" data-name="chithra">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-400/30 flex items-center justify-center text-emerald-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">CH</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-emerald-300 transition-colors">Chithra</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#33</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 34 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-amber-400/40 transition-all hover:scale-[1.02] group" data-name="u k noorunnisa uk noorunnisa">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/10 border border-amber-400/30 flex items-center justify-center text-amber-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">UN</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-amber-300 transition-colors">U K Noorunnisa</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#34</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 35 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-pink-400/40 transition-all hover:scale-[1.02] group" data-name="shreelaxmi benni">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-pink-500/20 to-rose-500/10 border border-pink-400/30 flex items-center justify-center text-pink-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">SB</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-pink-300 transition-colors">Shreelaxmi Benni</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#35</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-pink-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 36 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-indigo-400/40 transition-all hover:scale-[1.02] group" data-name="medisetty mamatha durga">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/20 to-violet-500/10 border border-indigo-400/30 flex items-center justify-center text-indigo-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">MD</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-indigo-300 transition-colors">Medisetty Mamatha Durga</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#36</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 37 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-cyan-400/40 transition-all hover:scale-[1.02] group" data-name="siyan l mulla">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/10 border border-cyan-400/30 flex items-center justify-center text-cyan-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">SM</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-cyan-300 transition-colors">Siyan L Mulla</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#37</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 38 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-purple-400/40 transition-all hover:scale-[1.02] group" data-name="sandesh t">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500/20 to-indigo-500/10 border border-purple-400/30 flex items-center justify-center text-purple-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">ST</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-purple-300 transition-colors">Sandesh T</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#38</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 39 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-emerald-400/40 transition-all hover:scale-[1.02] group" data-name="akash k s">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-400/30 flex items-center justify-center text-emerald-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">AS</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-emerald-300 transition-colors">Akash K S</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#39</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 40 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-amber-400/40 transition-all hover:scale-[1.02] group" data-name="chinmayi c">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/10 border border-amber-400/30 flex items-center justify-center text-amber-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">CC</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-amber-300 transition-colors">Chinmayi C</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#40</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 41 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-pink-400/40 transition-all hover:scale-[1.02] group" data-name="varsha">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-pink-500/20 to-rose-500/10 border border-pink-400/30 flex items-center justify-center text-pink-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">VA</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-pink-300 transition-colors">Varsha</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#41</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-pink-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 42 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-indigo-400/40 transition-all hover:scale-[1.02] group" data-name="akash fakeerappa madar">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/20 to-violet-500/10 border border-indigo-400/30 flex items-center justify-center text-indigo-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">AM</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-indigo-300 transition-colors">Akash Fakeerappa Madar</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#42</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 43 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-cyan-400/40 transition-all hover:scale-[1.02] group" data-name="k naeen taj k naeem taj">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/10 border border-cyan-400/30 flex items-center justify-center text-cyan-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">NT</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-cyan-300 transition-colors">K Naeen Taj</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#43</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 44 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-purple-400/40 transition-all hover:scale-[1.02] group" data-name="abhilashagouda patil">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500/20 to-indigo-500/10 border border-purple-400/30 flex items-center justify-center text-purple-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">AP</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-purple-300 transition-colors">Abhilashagouda Patil</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#44</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 45 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-emerald-400/40 transition-all hover:scale-[1.02] group" data-name="kirankumar megalamani">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500/20 to-teal-500/10 border border-emerald-400/30 flex items-center justify-center text-emerald-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">KM</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-emerald-300 transition-colors">Kirankumar Megalamani</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#45</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 46 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-amber-400/40 transition-all hover:scale-[1.02] group" data-name="chandana subray naik">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/10 border border-amber-400/30 flex items-center justify-center text-amber-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">CN</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-amber-300 transition-colors">Chandana Subray Naik</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#46</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 47 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-pink-400/40 transition-all hover:scale-[1.02] group" data-name="chaitra shivanandappa kalasad">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-pink-500/20 to-rose-500/10 border border-pink-400/30 flex items-center justify-center text-pink-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">CK</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-pink-300 transition-colors">Chaitra Shivanandappa Kalasad</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#47</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-pink-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+        <!-- Member 48 -->
+        <div class="member-card liquid-glass rounded-2xl p-4 flex items-center gap-3.5 border border-white/10 hover:border-indigo-400/40 transition-all hover:scale-[1.02] group" data-name="varsha gouda">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/20 to-violet-500/10 border border-indigo-400/30 flex items-center justify-center text-indigo-300 font-mono font-bold text-xs shrink-0 group-hover:scale-105 transition-transform shadow-inner">VG</div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h5 class="text-sm font-semibold text-white truncate group-hover:text-indigo-300 transition-colors">Varsha Gouda</h5>
+              <span class="text-[10px] font-mono text-muted-foreground/60 shrink-0">#48</span>
+            </div>
+            <div class="flex items-center gap-1.5 mt-0.5"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span><span class="text-[11px] font-mono text-muted-foreground">Club Member</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- No match alert -->
+      <div id="noMembersFound" class="hidden text-center py-16">
+        <i data-lucide="user-x" class="w-12 h-12 text-muted-foreground/30 mx-auto mb-3"></i>
+        <h4 class="text-lg font-serif-heading text-white">No member found</h4>
+        <p class="text-xs text-muted-foreground font-mono mt-1">Try searching with a different name.</p>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/10 bg-slate-950/80 backdrop-blur-xl py-8 mt-16 relative z-10 text-center text-xs text-muted-foreground font-mono">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <span>© 2026 Srinivas Institute of Technology. All rights reserved.</span>
+      <a href="index.html" class="text-cyan-400 hover:text-white transition-colors">← Back to Main Hub</a>
+    </div>
+  </footer>
+
+  <script>
+    // Lucide initialization
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+
+    function filterClubMembers(query) {
+      const filter = (query || '').toLowerCase().trim();
+      const cards = document.querySelectorAll('.member-card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const name = (card.getAttribute('data-name') || '').toLowerCase();
+        if (!filter || name.includes(filter)) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      const countDisplay = document.getElementById('memberCountDisplay');
+      if (countDisplay) {
+        countDisplay.textContent = `Showing ${visibleCount} of 48 registered members`;
+      }
+
+      const noFound = document.getElementById('noMembersFound');
+      if (noFound) {
+        if (visibleCount === 0) {
+          noFound.classList.remove('hidden');
+        } else {
+          noFound.classList.add('hidden');
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
