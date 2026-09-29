@@ -46,6 +46,38 @@ if (sourceVideo) {
   if (!fs.existsSync(videoMp4)) { try { fs.copyFileSync(sourceVideo, videoMp4); } catch(e){} }
 }
 
+// Sync new NAVATVA logo across images/ and intro/assets/
+const srcLogo = "C:\\Users\\HP\\.gemini\\antigravity-ide\\brain\\52e51adf-fcd9-4d67-b5a9-2d78a9366505\\.user_uploaded\\media_1790679439003.png";
+const imgLogoPng = path.join(__dirname, 'images', 'ml_club_logo.png');
+const imgLogoJpg = path.join(__dirname, 'images', 'ml_club_logo.jpg');
+const introLogoPng = path.join(__dirname, 'intro', 'assets', 'ml-club-logo.png');
+const introLogoJpg = path.join(__dirname, 'intro', 'assets', 'ml-club-logo.jpg');
+
+let sourceLogo = null;
+if (fs.existsSync(srcLogo)) {
+  sourceLogo = srcLogo;
+} else if (fs.existsSync(imgLogoPng)) {
+  sourceLogo = imgLogoPng;
+} else if (fs.existsSync(imgLogoJpg)) {
+  sourceLogo = imgLogoJpg;
+}
+
+if (sourceLogo) {
+  try {
+    fs.copyFileSync(sourceLogo, imgLogoPng);
+    fs.copyFileSync(sourceLogo, imgLogoJpg);
+    const introAssetsDir = path.join(__dirname, 'intro', 'assets');
+    if (!fs.existsSync(introAssetsDir)) {
+      fs.mkdirSync(introAssetsDir, { recursive: true });
+    }
+    fs.copyFileSync(sourceLogo, introLogoPng);
+    fs.copyFileSync(sourceLogo, introLogoJpg);
+    console.log('[build-static] Synced NAVATVA logo to images/ and intro/assets/');
+  } catch (err) {
+    console.warn('[build-static] Could not sync logo:', err.message);
+  }
+}
+
 // Copy directories recursively
 const dirsToCopy = ['images', 'intro', 'assets', 'public'];
 
