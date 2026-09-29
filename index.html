@@ -1018,7 +1018,7 @@
     }
 
     /* ========================================================================= */
-    /* CINEMATIC PURE VIDEO INTRO OVERLAY (HERO.MP4)                             */
+    /* CINEMATIC PURE VIDEO INTRO OVERLAY (HERO.MP4) & HOLLYWOOD DISSOLVE       */
     /* ========================================================================= */
     #intro-stage {
       position: fixed;
@@ -1035,15 +1035,19 @@
       cursor: pointer;
       user-select: none;
       -webkit-user-select: none;
-      will-change: opacity, transform;
+      will-change: opacity, transform, filter;
       transform: translateZ(0);
       -webkit-transform: translateZ(0);
-      transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1), transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+      /* Balanced cinematic S-curve for ultra-smooth dissolve */
+      transition: opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1),
+                  transform 1.4s cubic-bezier(0.4, 0, 0.2, 1),
+                  filter 1.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     #intro-stage.exit {
       opacity: 0;
-      transform: scale(1.04);
+      transform: scale(1.05);
+      filter: blur(8px);
       pointer-events: none;
     }
 
@@ -1061,7 +1065,58 @@
       /* Permanent 4K Ultra-Sharp clarity & high-contrast micro-filter */
       filter: contrast(1.08) brightness(1.02) saturate(1.05);
       -webkit-filter: contrast(1.08) brightness(1.02) saturate(1.05);
+      transition: transform 1.4s cubic-bezier(0.4, 0, 0.2, 1),
+                  filter 1.4s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 1;
+    }
+
+    #intro-stage.exit #introVideo {
+      transform: scale(1.06);
+      filter: contrast(1.12) brightness(1.15) blur(6px);
+    }
+
+    /* Soft film dissolve vignette between intro and website */
+    #intro-stage::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, transparent 40%, rgba(1, 4, 10, 0.75) 100%);
+      pointer-events: none;
+      z-index: 2;
+      transition: opacity 1.2s ease;
+    }
+
+    #intro-stage.exit::after {
+      opacity: 0;
+    }
+
+    /* Cinematic cross-fade reveal on website navbar & hero while transitioning */
+    body.intro-active #mainNav {
+      opacity: 0;
+      transform: translateY(-16px);
+      transition: opacity 1.3s cubic-bezier(0.25, 1, 0.5, 1) 0.15s,
+                  transform 1.3s cubic-bezier(0.25, 1, 0.5, 1) 0.15s;
+    }
+
+    body.intro-active #hero > div {
+      opacity: 0;
+      transform: scale(0.97) translateY(24px);
+      transition: opacity 1.3s cubic-bezier(0.25, 1, 0.5, 1) 0.2s,
+                  transform 1.3s cubic-bezier(0.25, 1, 0.5, 1) 0.2s;
+    }
+
+    body:not(.intro-active) #mainNav {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 1.3s cubic-bezier(0.25, 1, 0.5, 1) 0.15s,
+                  transform 1.3s cubic-bezier(0.25, 1, 0.5, 1) 0.15s;
+    }
+
+    body:not(.intro-active) #hero > div {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      transition: opacity 1.3s cubic-bezier(0.25, 1, 0.5, 1) 0.2s,
+                  transform 1.3s cubic-bezier(0.25, 1, 0.5, 1) 0.2s;
     }
 
     .intro-res-pill {
@@ -5071,7 +5126,8 @@
 
       if (!stage || !video) return;
 
-      // Lock body scrolling while intro is playing
+      // Lock body scrolling and hold website in ready state while intro plays
+      document.body.classList.add('intro-active');
       document.body.style.overflow = 'hidden';
 
       let exited = false;
@@ -5080,18 +5136,18 @@
         if (exited) return;
         exited = true;
 
-        // Trigger 1.2s smooth cinematic dissolve
+        // Trigger simultaneous 1.4s cinematic film dissolve & website entrance
         stage.classList.add('exit');
+        document.body.classList.remove('intro-active');
 
-        // Unlock page scroll smoothly
+        // Allow ambient music to smoothly begin
+        try {
+          if (typeof startMusicOnFirstGesture === 'function') startMusicOnFirstGesture();
+        } catch (e) { }
+
+        // Clean up DOM and restore page scrolling smoothly AFTER the 1.4s dissolve completes
         setTimeout(() => {
           document.body.style.overflow = '';
-        }, 400);
-
-        let cleaned = false;
-        function cleanup() {
-          if (cleaned) return;
-          cleaned = true;
           if (video) {
             video.pause();
             try { video.removeAttribute('src'); video.load(); } catch (e) { }
@@ -5099,10 +5155,7 @@
           if (stage && stage.parentNode) {
             stage.parentNode.removeChild(stage);
           }
-        }
-
-        stage.addEventListener('transitionend', cleanup, { once: true });
-        setTimeout(cleanup, 1300);
+        }, 1450);
       }
 
       // Tap / Click anywhere on screen to skip
